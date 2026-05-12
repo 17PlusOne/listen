@@ -14,12 +14,13 @@
 
 ## 2. Demo 链接
 
-- **线上 Demo**:`https://listen-creator.vercel.app`(部署后回填)
+- **线上 Demo**:[https://listen-indol.vercel.app/](https://listen-indol.vercel.app/)
+- **免登录示例洞察**(评审最快路径,无需密码):[https://listen-indol.vercel.app/showcase](https://listen-indol.vercel.app/showcase)
 - **代码仓库**:[github.com/17PlusOne/listen](https://github.com/17PlusOne/listen)(私有,评审账号已加协作者)
-- **首次进入路径**:
-  1. 落地页 → 选择一个研究模板(商单决策 / 创作者退潮 / 新人扶持)
-  2. 用 `ADMIN_PASSWORD` 登录研究员后台
-  3. 生成参与者链接,即可在另一个浏览器以受访创作者身份开始访谈
+- **研究员后台密码**:`listen-judge-2026-5e68dc`(只供答辩评审使用,答辩后即轮换)
+- **首次进入路径(两条)**:
+  - **A · 30 秒看产品输出**:打开 `/showcase` → 三个 Tab 直接看研究背景 / 三段访谈全文(stated vs revealed) / 跨样本聚合报告,无需任何登录。
+  - **B · 5 分钟完整体验**:落地页 → 选择研究模板(商单决策 / 创作者退潮 / 新人扶持) → 用上方密码登录研究员后台 → 生成参与者链接 → 在另一个浏览器以受访创作者身份开始访谈。
 - **示例数据**:登录后台 → 点击「加载示例研究」→ 自动加载「创作者退潮归因深访 · 2026 Q1 样本」与 3 段已完成访谈(小晚 / 阿哲 / 燕子)及跨样本聚合报告
 
 ---
