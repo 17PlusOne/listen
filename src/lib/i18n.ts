@@ -651,6 +651,45 @@ export const t = {
     zh: '生成链接失败',
     en: 'Failed to generate link',
   },
+
+  // ============================================
+  // Showcase 页(免登录示例洞察)
+  // ============================================
+  showcaseTitle: {
+    zh: '示例研究 · 创作者退潮归因深访',
+    en: 'Sample Study · Why Creators Quietly Stop Posting',
+  },
+  showcaseSubtitle: {
+    zh: '这是一份真实由「听见」运行的样本研究。完整产品流程需登录后台，密码已附在 SUBMISSION 文档中。',
+    en: 'A real sample study run by Listen. Full product flow requires login—password is shared in the SUBMISSION document.',
+  },
+  showcaseTabStudy: { zh: '研究背景', en: 'Study brief' },
+  showcaseTabInterviews: { zh: '三段访谈', en: 'Three interviews' },
+  showcaseTabAggregate: { zh: '跨样本聚合', en: 'Aggregate insights' },
+  showcaseStudyQuestionLabel: { zh: '研究问题', en: 'Research question' },
+  showcaseStudyTopicsLabel: { zh: '话题领域', en: 'Topic areas' },
+  showcaseStudyCoreQLabel: { zh: '核心问题', en: 'Core questions' },
+  showcaseStudyProfileLabel: { zh: '受访者画像字段', en: 'Participant profile fields' },
+  showcaseInterviewProfile: { zh: '受访者画像', en: 'Participant profile' },
+  showcaseInterviewTranscript: { zh: '访谈对话', en: 'Transcript' },
+  showcaseInterviewSynthesis: { zh: '访谈洞察', en: 'Interview insights' },
+  showcaseStated: { zh: 'Stated · 受访者明确表达', en: 'Stated · explicitly said' },
+  showcaseRevealed: { zh: 'Revealed · AI 从对话推断', en: 'Revealed · inferred by AI' },
+  showcaseThemes: { zh: '主题', en: 'Themes' },
+  showcaseContradictions: { zh: '内部矛盾点', en: 'Internal contradictions' },
+  showcaseKeyInsights: { zh: '关键洞察', en: 'Key insights' },
+  showcaseCommonThemes: { zh: '跨样本共同主题', en: 'Common themes across samples' },
+  showcaseDivergent: { zh: '分歧观点', en: 'Divergent views' },
+  showcaseFindings: { zh: '关键发现', en: 'Key findings' },
+  showcaseImplications: { zh: '产品/研究含义', en: 'Product & research implications' },
+  showcaseBottomLine: { zh: '一句话结论', en: 'Bottom line' },
+  showcaseAiTurn: { zh: '听见', en: 'Listen' },
+  showcaseUserTurn: { zh: '受访者', en: 'Participant' },
+  showcaseFrequency: { zh: '出现次数', en: 'frequency' },
+  showcaseQuotes: { zh: '代表性引用', en: 'Representative quotes' },
+  showcaseBackHome: { zh: '返回首页', en: 'Back to home' },
+  showcaseEnterAdmin: { zh: '进入研究员后台', en: 'Enter researcher console' },
+  showcaseEvidence: { zh: '关键证据', en: 'Key evidence' },
 } as const;
 
 export type TranslationKey = keyof typeof t;

@@ -80,7 +80,7 @@ const HomeLanding: React.FC = () => {
               <ArrowRight size={17} />
             </button>
             <button
-              onClick={() => router.push('/login?redirect=%2Fstudies')}
+              onClick={() => router.push('/showcase')}
               className="btn-secondary text-[15px]"
             >
               {tr('heroCtaSecondary')}
@@ -293,13 +293,21 @@ const HomeLanding: React.FC = () => {
                 ? '5 分钟配置一份研究，48 小时拿到 100 份深度访谈，所有数据加密保存在你自己的服务器。'
                 : 'Configure a study in 5 minutes. Collect 100 deep interviews in 48 hours. All data encrypted on your own server.'}
             </p>
-            <button
-              onClick={() => router.push('/login')}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-listen-paper text-listen-ink rounded-full font-medium hover:bg-white transition-all hover:shadow-[0_10px_30px_rgba(250,247,242,0.2)] hover:-translate-y-0.5"
-            >
-              {tr('heroCtaPrimary')}
-              <ArrowRight size={18} />
-            </button>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <button
+                onClick={() => router.push('/login')}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-listen-paper text-listen-ink rounded-full font-medium hover:bg-white transition-all hover:shadow-[0_10px_30px_rgba(250,247,242,0.2)] hover:-translate-y-0.5"
+              >
+                {tr('heroCtaPrimary')}
+                <ArrowRight size={18} />
+              </button>
+              <button
+                onClick={() => router.push('/showcase')}
+                className="inline-flex items-center gap-2 px-7 py-4 border border-listen-paper/40 text-listen-paper rounded-full font-medium hover:bg-listen-paper/10 transition-all"
+              >
+                {tr('heroCtaSecondary')}
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>
