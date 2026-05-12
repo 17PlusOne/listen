@@ -92,11 +92,15 @@ export async function POST(request: Request) {
     const token = await jwtBuilder.sign(secret);
 
     // Build the full URL
-    const baseUrl = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // 优先用手动设的 NEXT_PUBLIC_BASE_URL（所以在 Vercel 上能走固定主域名，而不是随机部署子域）
+    // 未设时 fallback 到 VERCEL_URL，再不行用 localhost
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
-    const participantUrl = `${baseUrl}/p/${token}`;
+    // 去除末尾斜杠，避免拼出双斜杠
+    const normalizedBase = baseUrl.replace(/\/+$/, '');
+    const participantUrl = `${normalizedBase}/p/${token}`;
 
     return NextResponse.json({
       token,
