@@ -66,9 +66,11 @@ export interface AIModelOption {
 
 // Available Gemini models (verified from official docs)
 export const GEMINI_MODELS: AIModelOption[] = [
-  { id: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash', desc: 'Fast, cost-effective' },
-  { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', desc: 'Higher quality' },
-  { id: 'gemini-3-pro-preview', label: 'Gemini 3 Pro Preview', desc: 'Most intelligent (preview)' },
+  { id: 'gemini-3.1-flash-lite', label: 'Gemini 3.1 Flash Lite', desc: 'Fast, free tier 500 RPD' },
+  { id: 'gemini-3-flash-preview', label: 'Gemini 3 Flash', desc: 'Higher quality, free tier 20 RPD' },
+  { id: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash', desc: 'Stable fallback' },
+  { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro', desc: 'Paid tier' },
+  { id: 'gemini-3-pro-preview', label: 'Gemini 3 Pro Preview', desc: 'Paid tier, most intelligent' },
 ];
 
 // Available Claude models (verified from official docs)
@@ -79,11 +81,12 @@ export const CLAUDE_MODELS: AIModelOption[] = [
 ];
 
 // Default models for each provider
-export const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash';
+// Free tier friendly: Flash Lite 500 RPD for chat, Flash 20 RPD for synthesis
+export const DEFAULT_GEMINI_MODEL = 'gemini-3.1-flash-lite';
 export const DEFAULT_CLAUDE_MODEL = 'claude-sonnet-4-5';
 
 // Synthesis models (auto-upgrade to best available for reasoning tasks)
-export const GEMINI_SYNTHESIS_MODEL = 'gemini-3-pro-preview';
+export const GEMINI_SYNTHESIS_MODEL = 'gemini-3-flash-preview';
 export const CLAUDE_SYNTHESIS_MODEL = 'claude-opus-4-5';
 
 // Link expiration options
