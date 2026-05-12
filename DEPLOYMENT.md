@@ -97,10 +97,7 @@ openssl rand -base64 32
 - 检查 `GEMINI_API_KEY` 是否在 Google AI Studio 还有配额
 - 检查 Vercel 的 Function Logs 看具体错误码 —— 通常是 429(限速)或 401(key 失效)
 
-### Q4:中英文切换后部分页面没翻译
-- 后台部分次级页面(StudySetup / Synthesis 详情页)i18n 覆盖未达 100%,这是提交窗口期的已知取舍,评审主路径(落地页 / 登录 / StudyList / Dashboard / Consent / InterviewChat / 模板卡)均已 100% 双语
-
-### Q5:想用 Claude 而不是 Gemini
+### Q4:想用 Claude 而不是 Gemini
 - 加环境变量 `ANTHROPIC_API_KEY=你的_claude_key`
 - 加 `AI_PROVIDER=claude`
 - 重新部署即可
@@ -140,9 +137,6 @@ npm run dev
 
 ---
 
-## 7. 联系
+## 7. 备注
 
-部署遇到任何问题,可直接联系提交人(见 SUBMISSION.md 末尾)。
-
-提交时间:2026 Q2
-最后更新:见 commit log
+部署遇到任何问题可参考 README 或本文档的常见排查章节。本项目使用 Next.js 14 + Vercel KV + Gemini / Claude，在主流部署环境上优化。
