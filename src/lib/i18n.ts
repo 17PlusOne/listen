@@ -690,6 +690,20 @@ export const t = {
   showcaseBackHome: { zh: '返回首页', en: 'Back to home' },
   showcaseEnterAdmin: { zh: '进入研究员后台', en: 'Enter researcher console' },
   showcaseEvidence: { zh: '关键证据', en: 'Key evidence' },
+
+  // 首页 hero 下方评审指引卡片
+  reviewerGuideLabel: { zh: '评审专用', en: 'For reviewers' },
+  reviewerGuideTitle: {
+    zh: '推荐先开「查看示例洞察」看完产品交付',
+    en: 'Start with “View Sample Insights” for the full product output',
+  },
+  reviewerGuideBody: {
+    zh: '示例洞察页免登录,三个 Tab 看完即是一次完整评审。若需跳测完整后台体验(创建研究 / 生成参与者链接),请使用以下临时密码:',
+    en: 'The Sample Insights page needs no login—the three tabs are the full review. To explore the researcher console (create studies, generate participant links), use the temporary password below:',
+  },
+  reviewerGuidePasswordLabel: { zh: '临时评审密码', en: 'Temporary review password' },
+  reviewerGuideCopy: { zh: '复制', en: 'Copy' },
+  reviewerGuideCopied: { zh: '已复制', en: 'Copied' },
 } as const;
 
 export type TranslationKey = keyof typeof t;

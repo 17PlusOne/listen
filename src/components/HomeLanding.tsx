@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ChevronRight, Sparkles, Users, Mic, FileText, Quote, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ChevronRight, Sparkles, Users, Mic, FileText, Quote, ShieldCheck, Copy, Check, BadgeCheck } from 'lucide-react';
 import BrandHeader from './BrandHeader';
 import { useLocale } from './LocaleProvider';
+
+const REVIEWER_PASSWORD = 'listen-judge-2026-5e68dc';
 
 const FADE_UP = {
   initial: { opacity: 0, y: 24 },
@@ -21,6 +23,17 @@ const stagger = (i: number) => ({
 const HomeLanding: React.FC = () => {
   const router = useRouter();
   const { tr, locale } = useLocale();
+  const [pwCopied, setPwCopied] = useState(false);
+
+  const handleCopyPassword = async () => {
+    try {
+      await navigator.clipboard.writeText(REVIEWER_PASSWORD);
+      setPwCopied(true);
+      setTimeout(() => setPwCopied(false), 2000);
+    } catch {
+      // 浏览器不支持 clipboard API 时静默失败
+    }
+  };
 
   return (
     <main className="min-h-screen bg-listen-paper text-listen-ink paper-texture">
@@ -87,10 +100,57 @@ const HomeLanding: React.FC = () => {
             </button>
           </motion.div>
 
-          {/* 防御性定位横条 */}
+          {/* 评审指引卡片 · 在 hero CTA 与防御性定位横条之间 */}
           <motion.div
             {...stagger(4)}
-            className="mt-16 flex items-start gap-3 max-w-2xl border-l-2 border-listen-accent pl-5 py-1"
+            className="mt-10 max-w-2xl rounded-md border border-listen-line/70 bg-white/60 backdrop-blur-sm p-5 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <BadgeCheck size={15} className="text-listen-accent" />
+              <span className="text-[11px] uppercase tracking-[0.18em] text-listen-accent font-medium">
+                {tr('reviewerGuideLabel')}
+              </span>
+            </div>
+            <h3 className="text-[15px] sm:text-[16px] font-medium text-listen-ink leading-snug">
+              {tr('reviewerGuideTitle')}
+            </h3>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-listen-inkSoft">
+              {tr('reviewerGuideBody')}
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 rounded-sm bg-listen-paper border border-listen-line/80 px-3 py-2">
+                <span className="text-[11px] uppercase tracking-wider text-listen-inkSoft">
+                  {tr('reviewerGuidePasswordLabel')}
+                </span>
+                <code className="text-[13px] font-mono text-listen-ink select-all">
+                  {REVIEWER_PASSWORD}
+                </code>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyPassword}
+                className="inline-flex items-center gap-1.5 text-[12.5px] text-listen-ink hover:text-listen-accent transition-colors px-2 py-1"
+                aria-label={tr('reviewerGuideCopy')}
+              >
+                {pwCopied ? (
+                  <>
+                    <Check size={14} className="text-listen-accent" />
+                    {tr('reviewerGuideCopied')}
+                  </>
+                ) : (
+                  <>
+                    <Copy size={14} />
+                    {tr('reviewerGuideCopy')}
+                  </>
+                )}
+              </button>
+            </div>
+          </motion.div>
+
+          {/* 防御性定位横条 */}
+          <motion.div
+            {...stagger(5)}
+            className="mt-12 flex items-start gap-3 max-w-2xl border-l-2 border-listen-accent pl-5 py-1"
           >
             <ShieldCheck size={18} className="text-listen-accent mt-1 flex-shrink-0" />
             <p className="text-[14px] leading-relaxed text-listen-inkSoft">
