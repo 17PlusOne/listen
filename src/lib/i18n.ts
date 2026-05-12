@@ -660,8 +660,8 @@ export const t = {
     en: 'Sample Study · Why Creators Quietly Stop Posting',
   },
   showcaseSubtitle: {
-    zh: '这是一份真实由「听见」运行的样本研究。完整产品流程需登录后台，密码已附在 SUBMISSION 文档中。',
-    en: 'A real sample study run by Listen. Full product flow requires login—password is shared in the SUBMISSION document.',
+    zh: '下面是「听见」在一份创作者退潮课题上跑出来的完整交付：研究设计、三段访谈原文、跨样本聚合报告。无需登录，三个 Tab 看完即是一次评审。',
+    en: 'Below is what Listen actually delivered on one creator-dropoff study—study design, three full interviews, and the cross-sample synthesis. No login needed; the three tabs are the review itself.',
   },
   showcaseTabStudy: { zh: '研究背景', en: 'Study brief' },
   showcaseTabInterviews: { zh: '三段访谈', en: 'Three interviews' },
