@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ChevronRight, Sparkles, Users, Mic, FileText, Quote, ShieldCheck, Copy, Check, BadgeCheck } from 'lucide-react';
+import { ArrowRight, ChevronRight, Sparkles, Users, Mic, FileText, Quote, ShieldCheck, Copy, Check, BadgeCheck, Github, Code2 } from 'lucide-react';
 import BrandHeader from './BrandHeader';
 import { useLocale } from './LocaleProvider';
 
 const REVIEWER_PASSWORD = 'listen-judge-2026-5e68dc';
+const SOURCE_REPO_URL = 'https://github.com/17PlusOne/listen';
 
 const FADE_UP = {
   initial: { opacity: 0, y: 24 },
@@ -147,9 +148,40 @@ const HomeLanding: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* 防御性定位横条 */}
+          {/* 源码透明度卡片 · 评审指引卡片下方 */}
           <motion.div
             {...stagger(5)}
+            className="mt-4 max-w-2xl rounded-md border border-listen-line/70 bg-white/60 backdrop-blur-sm p-5 sm:p-6"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Code2 size={15} className="text-listen-ink" />
+              <span className="text-[11px] uppercase tracking-[0.18em] text-listen-inkSoft font-medium">
+                {tr('sourceLabel')}
+              </span>
+            </div>
+            <h3 className="text-[15px] sm:text-[16px] font-medium text-listen-ink leading-snug">
+              {tr('sourceTitle')}
+            </h3>
+            <p className="mt-2 text-[13.5px] leading-relaxed text-listen-inkSoft">
+              {tr('sourceBody')}
+            </p>
+            <div className="mt-4">
+              <a
+                href={SOURCE_REPO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-sm border border-listen-line/80 bg-listen-paper px-3 py-2 text-[13px] text-listen-ink hover:text-listen-accent hover:border-listen-accent/60 transition-colors"
+              >
+                <Github size={15} />
+                <span>{tr('sourceRepoLabel')}</span>
+                <ArrowRight size={13} className="opacity-60" />
+              </a>
+            </div>
+          </motion.div>
+
+          {/* 防御性定位横条 */}
+          <motion.div
+            {...stagger(6)}
             className="mt-12 flex items-start gap-3 max-w-2xl border-l-2 border-listen-accent pl-5 py-1"
           >
             <ShieldCheck size={18} className="text-listen-accent mt-1 flex-shrink-0" />

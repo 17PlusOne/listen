@@ -704,6 +704,18 @@ export const t = {
   reviewerGuidePasswordLabel: { zh: '临时评审密码', en: 'Temporary review password' },
   reviewerGuideCopy: { zh: '复制', en: 'Copy' },
   reviewerGuideCopied: { zh: '已复制', en: 'Copied' },
+
+  // 首页源码透明度卡片
+  sourceLabel: { zh: '工程透明', en: 'Source transparency' },
+  sourceTitle: {
+    zh: '愿意被审视代码 —— 完整 commit 历史可查',
+    en: 'Open for code review — full commit history available',
+  },
+  sourceBody: {
+    zh: '本作品的源码托管在 GitHub,可查看完整的工程迭代记录:从纸感品牌系统、i18n、KV 持久化降级、签名链接生成,到三层鉴权与多轮 prompt 设计。仓库当前为 Private,可通过 GitHub 申请只读访问。',
+    en: 'The source is hosted on GitHub with the full engineering history visible—paper-style design system, i18n, KV fallback logic, signed link generation, three-layer auth, and multiple prompt iterations. The repo is currently private; read-only access is available on request.',
+  },
+  sourceRepoLabel: { zh: '查看 GitHub 仓库', en: 'Open GitHub repository' },
 } as const;
 
 export type TranslationKey = keyof typeof t;
