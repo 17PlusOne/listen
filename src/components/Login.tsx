@@ -3,18 +3,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Lock, Loader2, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowLeft, ArrowRight } from 'lucide-react';
 import OAuthLogin from './OAuthLogin';
+import { useLocale } from './LocaleProvider';
+import LocaleToggle from './LocaleToggle';
 
 const Login: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { tr, locale } = useLocale();
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mode, setMode] = useState<'standalone' | 'hosted' | null>(null);
 
-  // Check deployment mode
   useEffect(() => {
     fetch('/api/config/mode')
       .then(res => res.json())
@@ -22,21 +24,20 @@ const Login: React.FC = () => {
       .catch(() => setMode('standalone'));
   }, []);
 
-  // Check for OAuth error in URL params
   useEffect(() => {
     const oauthError = searchParams.get('error');
     if (oauthError) {
       const errorMessages: Record<string, string> = {
-        oauth_init_failed: 'Failed to start sign-in. Please try again.',
-        oauth_failed: 'Sign-in failed. Please try again.',
-        missing_params: 'Invalid callback. Please try again.',
-        invalid_state: 'Session expired. Please try again.',
-        user_fetch_failed: 'Failed to get your profile. Please try again.',
-        no_email: 'Could not get your email. Make sure your GitHub email is verified.',
+        oauth_init_failed: locale === 'zh' ? '登录启动失败，请重试' : 'Failed to start sign-in. Please try again.',
+        oauth_failed: locale === 'zh' ? '登录失败，请重试' : 'Sign-in failed. Please try again.',
+        missing_params: locale === 'zh' ? '回调参数无效，请重试' : 'Invalid callback. Please try again.',
+        invalid_state: locale === 'zh' ? '会话已过期，请重试' : 'Session expired. Please try again.',
+        user_fetch_failed: locale === 'zh' ? '无法获取你的资料' : 'Failed to get your profile.',
+        no_email: locale === 'zh' ? '无法获取邮箱，请确认邮箱已在 GitHub 验证' : 'Could not get your email.',
       };
-      setError(errorMessages[oauthError] || 'Sign-in failed. Please try again.');
+      setError(errorMessages[oauthError] || (locale === 'zh' ? '登录失败' : 'Sign-in failed.'));
     }
-  }, [searchParams]);
+  }, [searchParams, locale]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,107 +54,143 @@ const Login: React.FC = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Authentication failed');
+        setError(data.error || (locale === 'zh' ? '密码错误' : 'Authentication failed'));
         return;
       }
 
-      // Redirect to studies on success (validate to prevent open redirect)
       const rawRedirect = searchParams.get('redirect') || '/studies';
       const redirect = rawRedirect.startsWith('/') && !rawRedirect.startsWith('//')
         ? rawRedirect
         : '/studies';
       router.push(redirect);
     } catch {
-      setError('Connection error. Please try again.');
+      setError(locale === 'zh' ? '网络错误，请重试' : 'Connection error. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  // Loading state while checking mode
   if (mode === null) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
-        <Loader2 size={24} className="animate-spin text-stone-400" />
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <Loader2 size={22} className="animate-spin text-listen-inkMute" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-900 flex items-center justify-center p-8">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-sm w-full"
-      >
-        <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-8">
-          <div className="text-center mb-6">
-            <div className="w-12 h-12 rounded-full bg-stone-700 flex items-center justify-center mx-auto mb-4">
-              <Lock size={24} className="text-stone-300" />
-            </div>
-            <h1 className="text-xl font-bold text-white">Researcher Login</h1>
-            <p className="text-stone-400 text-sm mt-1">
-              {mode === 'hosted'
-                ? 'Sign in to access your research dashboard'
-                : 'Enter your admin password to access the dashboard'
-              }
-            </p>
-          </div>
-
-          {error && (
-            <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
-              <AlertCircle size={16} className="flex-shrink-0" />
-              {error}
-            </div>
-          )}
-
-          {mode === 'hosted' ? (
-            <OAuthLogin loading={loading} />
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-stone-300 mb-1">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter admin password"
-                  className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500"
-                  autoFocus
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={!password.trim() || loading}
-                className="w-full py-3 bg-stone-600 hover:bg-stone-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" />
-                    Logging in...
-                  </>
-                ) : (
-                  'Login'
-                )}
-              </button>
-            </form>
-          )}
-
-          <div className="mt-6 pt-6 border-t border-stone-700 text-center">
-            <button
-              onClick={() => router.push('/setup')}
-              className="text-sm text-stone-400 hover:text-stone-300 transition-colors"
-            >
-              Back to Study Setup
-            </button>
-          </div>
+    <main className="min-h-screen bg-listen-paper paper-texture relative overflow-hidden">
+      {/* 顶部极简栏 */}
+      <div className="absolute top-0 left-0 right-0 z-20 px-6 sm:px-10 h-16 flex items-center justify-between">
+        <button
+          onClick={() => router.push('/')}
+          className="btn-ghost text-[13px]"
+        >
+          <ArrowLeft size={14} />
+          {tr('loginBack')}
+        </button>
+        <div className="flex items-baseline gap-2">
+          <span className="font-serif text-[18px] font-semibold text-listen-ink">{tr('brand')}</span>
+          <span className="text-[10px] tracking-[0.22em] uppercase text-listen-inkMute">Listen</span>
         </div>
-      </motion.div>
-    </div>
+        <LocaleToggle />
+      </div>
+
+      {/* 装饰性大字 */}
+      <div className="absolute -bottom-20 -right-20 select-none pointer-events-none opacity-[0.04] text-[320px] font-serif text-listen-ink leading-none hidden lg:block">
+        Listen.
+      </div>
+
+      <div className="min-h-screen flex items-center justify-center px-6 py-20">
+        <div className="w-full max-w-md">
+          {/* 标题区 */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-center mb-12"
+          >
+            <div className="eyebrow mb-4">{locale === 'zh' ? '研究员入口' : 'Researcher entrance'}</div>
+            <h1 className="font-serif text-[40px] sm:text-[48px] leading-tight font-semibold text-listen-ink mb-4 tracking-tight">
+              {tr('loginTitle')}
+            </h1>
+            <p className="text-[15px] text-listen-inkSoft leading-relaxed max-w-sm mx-auto">
+              {tr('loginSubtitle')}
+            </p>
+          </motion.div>
+
+          {/* 卡片 */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="paper-card rounded-2xl p-8 sm:p-10"
+          >
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-start gap-2.5 p-3.5 mb-5 bg-listen-accentSoft border border-listen-accent/20 rounded-xl text-listen-accentDeep text-[13.5px]"
+              >
+                <AlertCircle size={15} className="flex-shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </motion.div>
+            )}
+
+            {mode === 'hosted' ? (
+              <OAuthLogin loading={loading} />
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="password" className="block text-[13px] font-medium text-listen-inkSoft mb-2 tracking-wide">
+                    {tr('loginPasswordLabel')}
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={tr('loginPasswordPlaceholder')}
+                    className="input-paper"
+                    autoFocus
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={!password.trim() || loading}
+                  className="btn-primary w-full"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      {tr('loginLoading')}
+                    </>
+                  ) : (
+                    <>
+                      {tr('loginButton')}
+                      <ArrowRight size={16} />
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </motion.div>
+
+          {/* 底部辅助文案 */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-center text-[12px] text-listen-inkMute mt-8 leading-relaxed"
+          >
+            {locale === 'zh'
+              ? '密码在你的服务器上验证 · 数据加密保存 · API Key 永不下发'
+              : 'Password verified on your server · data encrypted · API keys never leave the backend'}
+          </motion.p>
+        </div>
+      </div>
+    </main>
   );
 };
 

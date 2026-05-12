@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation'
+import HomeLanding from '@/components/HomeLanding';
 
 export default function Home() {
-  // Redirect to all studies list by default
-  redirect('/studies')
+  return <HomeLanding />;
 }
