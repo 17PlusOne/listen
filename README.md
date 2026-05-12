@@ -1,405 +1,118 @@
-# OpenInterviewer
+# 听见 Listen
 
-Open-source AI-powered qualitative research interview platform. Conduct deep, nuanced interviews at scale with AI interviewers that adapt their style based on participant responses.
+> 给创作者经济的 AI 深度访谈室
 
-## Features
+听见 Listen 是一个面向创作者经济场景的研究员工作台。研究员在后台 5 分钟配置一个研究 → 生成可分享链接 → 创作者与访谈员「听见」一对一对话 → 自动产出 stated / revealed 双栏洞察 + 跨样本聚合报告。
 
-- **AI-Powered Interviews**: Configurable AI interviewer with structured, standard, or exploratory modes
-- **Profile Extraction**: Automatically gather participant demographic information during natural conversation
-- **Multi-Question Support**: Define core research questions that the AI weaves into conversation naturally
-- **Study Management**: Save, edit, and manage multiple studies from the dashboard
-- **Real-time Analysis**: Automatic synthesis of stated vs revealed preferences, themes, and contradictions
-- **Aggregate Synthesis**: Cross-interview analysis to identify patterns across all participants
-- **Follow-up Studies**: Generate new studies based on synthesis findings
-- **Secure Deployment**: API keys stay server-side, never exposed to participants
-- **One-Click Deploy**: Deploy your own instance to Vercel in minutes
+**作者:** RED · Finance 团队
+**提交时间:** 2026 Q2
 
-## Deploy Your Own Instance
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/linxule/openinterviewer&env=GEMINI_API_KEY,ADMIN_PASSWORD&envDescription=API%20key%20for%20Gemini%20and%20admin%20password%20for%20researcher%20access&envLink=https://aistudio.google.com/apikey&project-name=openinterviewer&repository-name=openinterviewer&stores=%5B%7B%22type%22:%22kv%22%7D%5D)
+## 三大开箱模板
 
-### Quick Start
+| 模板 | 场景 | 主要研究问题 |
+|------|------|------|
+| **商单决策深访** | 商业化 | 同样的预算,创作者为什么有的接有的拒?把模糊的「看情况」追到第三层 |
+| **创作者退潮归因** | 留存 | 过去 60 天发文量下降 ≥ 30% 的创作者,Dashboard 不会告诉你的那些原因 |
+| **新人扶持期望** | 新人 | 入驻 90 天内最影响留存的那一次对话 / 一次推荐 / 一次失望 |
 
-1. Click the "Deploy with Vercel" button above
-2. Connect your GitHub account (if not already)
-3. Enter the required environment variables:
-   - `GEMINI_API_KEY`: Your Google Gemini API key ([Get one here](https://aistudio.google.com/apikey))
-   - `ADMIN_PASSWORD`: Password to access the researcher dashboard
-4. Click "Deploy"
-5. Wait for deployment to complete (~2 minutes)
-6. Visit your app and configure your study!
+---
 
-### Environment Variables
+## 快速开始
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GEMINI_API_KEY` | Yes | Google Gemini API key for AI interviews |
-| `ADMIN_PASSWORD` | Yes | Password to protect researcher dashboard |
-| `ANTHROPIC_API_KEY` | No | Optional: Use Claude instead of Gemini for interviews |
-| `AI_PROVIDER` | No | `gemini` (default) or `claude` |
-| `AI_MODEL` | No | Override default model (see Model Selection below) |
+### 评审 / 部署
+请直接参阅 [DEPLOYMENT.md](./DEPLOYMENT.md) —— 10 分钟在 Vercel 上跑起来。
 
-## How It Works
+### 作品提交说明
+请直接参阅 [SUBMISSION.md](./SUBMISSION.md) —— 五字段定稿,包含动机、技术、启发全部内容。
 
-### For Researchers
+---
 
-1. **Setup Study** (`/setup`): Configure your research questions, profile fields, and AI behavior
-2. **Save Study**: Studies are saved to your dashboard for reuse and editing
-3. **Generate Link**: Create a shareable participant link with your study configuration embedded
-4. **Share**: Distribute the link to participants via email, survey tools, or social media
-5. **View Results** (`/dashboard`): Access individual transcripts and per-interview synthesis
-6. **Aggregate Analysis**: View cross-interview patterns, themes, and divergent views
-7. **Generate Follow-ups**: Create new studies based on synthesis findings to dig deeper
-
-### For Participants
-
-1. **Click Link**: Participants visit the shared URL
-2. **Consent**: Read study information and consent to participate
-3. **Interview**: Chat naturally with the AI interviewer
-4. **Complete**: View summary and thank you message
-
-### Data Flow
-
-```text
-Researcher                          Participant
-    │                                    │
-    ├── Setup Study                      │
-    ├── Save to Dashboard                │
-    ├── Generate Link ──────────────────►│
-    │                                    ├── Consent
-    │                                    ├── Interview
-    │                                    │       ↓
-    │                                    │   AI Interviewer (Gemini/Claude)
-    │                                    │       ↓
-    │                                    └── Complete
-    │                                           ↓
-    │◄───────────────────────────── Vercel KV (Storage)
-    │
-    ├── View Individual Synthesis
-    ├── Run Aggregate Analysis
-    └── Generate Follow-up Studies
-```
-
-## Local Development
+## 本地开发
 
 ```bash
-# Install dependencies
+git clone https://github.com/17PlusOne/listen.git
+cd listen
 npm install
 
-# Set environment variables
-cp .env.example .env.local
-# Edit .env.local with your API keys
+# 创建 .env.local(详见 DEPLOYMENT.md)
+cat > .env.local <<EOF
+GEMINI_API_KEY=你的_gemini_key
+ADMIN_PASSWORD=本地测试密码
+JWT_SECRET=$(openssl rand -base64 32)
+BCRYPT_PEPPER=$(openssl rand -base64 32)
+EOF
 
-# Run development server
 npm run dev
-
-# Build for production
-npm run build
 ```
 
-### Development without Vercel KV
+访问 http://localhost:3000
 
-The app works without Vercel KV during development:
-- Interview data is not persisted (warning shown)
-- Dashboard shows empty state
-- All other features work normally
+---
 
-To test with KV locally, install the [Vercel CLI](https://vercel.com/docs/cli) and run:
+## 技术栈
 
-```bash
-vercel link
-vercel env pull .env.local
+- **Next.js 14 App Router** · TypeScript · React 18
+- **Tailwind CSS** + 自建纸感品牌系统(`bg #FAF7F2` / `ink #1A1814` / `accent #D94A4A`)
+- **Framer Motion** 用于落地页与卡片入场动画
+- **Gemini 2.5 / Claude Sonnet 4.5** 双 provider 可切换
+- **Vercel KV (Upstash Redis)** 持久化研究与访谈(可选)
+- **自建轻量 LocaleProvider** 处理 zh / en 双语,不引入沉重 i18n 依赖
+
+---
+
+## 关键设计决策(详见 SUBMISSION.md §5)
+
+1. **AI 是访谈员,不是创作者** —— 我们不替创作者生成内容,我们替研究员追问真相
+2. **第三层追问硬约束** —— prompt 层禁止 AI 在出现「看情况」「主要是」等模糊词时推进话题
+3. **stated vs revealed 双栏拆分** —— 聚合报告天然区分「说什么」和「透露什么」
+4. **纸感品牌** —— 创作者聊的是私密话题,界面温度决定他们愿不愿意说
+
+---
+
+## 目录结构
+
+```
+src/
+├── app/                    # Next.js App Router 路由
+│   ├── page.tsx           # 落地页 (HomeLanding)
+│   ├── login/             # 研究员登录
+│   ├── setup/             # 研究配置
+│   ├── studies/           # 研究列表与详情
+│   ├── dashboard/         # 访谈记录
+│   ├── consent/           # 知情同意
+│   ├── interview/         # 访谈对话
+│   └── p/[token]/         # 参与者链接入口
+├── components/
+│   ├── HomeLanding.tsx    # 落地页(中英双语 hero/价值/模板/引文)
+│   ├── BrandHeader.tsx    # 顶部品牌栏
+│   ├── LocaleProvider.tsx # 自建 i18n provider
+│   ├── LocaleToggle.tsx   # zh/en 切换器
+│   ├── StudyList.tsx      # 研究列表
+│   ├── StudySetup.tsx     # 研究配置表单(支持 ?template= 预填)
+│   ├── Consent.tsx        # 知情同意页(纸感)
+│   ├── InterviewChat.tsx  # 参与者对话页
+│   └── Synthesis.tsx      # 聚合分析视图
+├── lib/
+│   ├── i18n.ts            # 中英文文案表
+│   ├── templates.ts       # 三大研究模板
+│   ├── demoData.ts        # 创作者退潮研究 + 3 段示例访谈
+│   └── prompts/           # 访谈员「听见」的全部 prompt
+│       ├── interview.ts   # 第三层追问硬约束 + 不复述 + 不评价
+│       ├── greeting.ts    # 开场白(按场景定制)
+│       └── synthesis.ts   # 单访谈 + 跨访谈聚合
+└── types.ts               # 全局 TypeScript 类型
 ```
 
-## Storage Setup (Vercel KV via Upstash)
+---
 
-OpenInterviewer uses Vercel KV (powered by Upstash Redis) to persist studies and interview data. Without storage configured, studies won't be saved and interviews won't persist.
+## 评审主路径(15 分钟跑完)
 
-### Setting Up Vercel KV
+详见 [DEPLOYMENT.md §3 评审验收清单](./DEPLOYMENT.md#3-评审验收清单15-分钟跑完所有路径)。
 
-**Step 1: Create Upstash Redis Database**
+---
 
-1. Go to your [Vercel Dashboard](https://vercel.com)
-2. Select your **openinterviewer** project
-3. Click the **"Storage"** tab
-4. Click **"Upstash"**
-5. Click **"Create Database"**
-6. Select **"Redis"** (not Kafka)
-7. Fill in:
-   - **Name**: `openinterviewer` (or any name)
-   - **Primary Region**: Choose closest to your users (e.g., `us-east-1`)
-   - Leave other settings as default
-8. Click **"Create"**
+## 许可
 
-**Step 2: Connect Database to Project**
-
-1. After creation, click **"Connect Project"** button
-2. Select your **openinterviewer** project from the dropdown
-3. Choose environments to connect (select all: Production, Preview, Development)
-4. Click **"Connect"**
-
-**Step 3: Redeploy**
-
-1. Go to the **"Deployments"** tab
-2. Find your latest deployment
-3. Click **"..."** menu → **"Redeploy"**
-4. Wait for deployment to complete (~1-2 minutes)
-
-**Step 4: Verify**
-
-1. Visit your app and log in
-2. Create and save a study
-3. Navigate to "My Studies" - the study should now appear!
-
-### Free Tier Limits (Vercel Hobby Plan)
-
-- 10,000 commands/day
-- 256MB storage
-- Sufficient for testing and small-scale research
-
-### Environment Variables (Auto-configured)
-
-When you connect the database, these are automatically added:
-
-- `KV_REST_API_URL`
-- `KV_REST_API_TOKEN`
-- `KV_REST_API_READ_ONLY_TOKEN`
-- `KV_URL`
-
-## Demo Data
-
-To explore the full platform workflow without running actual interviews, you can load demo data:
-
-### Loading Demo Data
-
-1. Log in to your researcher dashboard
-2. Navigate to **My Studies** (`/studies`)
-3. Click **"Load Demo"** button (purple button in header)
-4. Or, if no studies exist, click **"Load Demo Data"** in the empty state
-
-### What's Included
-
-The demo includes:
-
-- **1 Demo Study**: "The Adaptive Self: Professional Identity in the Age of AI"
-  - 5 core research questions about AI impact on professional identity
-  - Profile schema: role, AI usage frequency, comfort level, industry
-  - AI reasoning enabled for synthesis
-
-- **3 Complete Interviews**:
-  - **Sarah** (Product Manager) - Enthusiastic AI adopter, found new strategic role
-  - **Marcus** (UX Designer) - Initial skeptic turned converted user
-  - **Priya** (Content Manager) - Efficiency vs authenticity tension
-
-- **Full Analysis**: Each interview includes synthesis with themes, contradictions, and insights
-
-### Exploring Features
-
-With demo data loaded, you can:
-
-1. **View Individual Interviews**: Click any interview to see full transcript
-2. **Per-Interview Synthesis**: See stated vs revealed preferences, themes
-3. **Aggregate Analysis**: Run cross-interview analysis to see patterns
-4. **Follow-up Studies**: Generate new studies based on findings
-
-### Clearing Demo Data
-
-Click **"Clear Demo"** (amber button in header) to remove all demo data and start fresh.
-
-## Project Structure
-
-```text
-/src
-├── app/                      # Next.js App Router pages
-│   ├── api/                  # API routes (server-side)
-│   │   ├── interview/        # AI interview generation
-│   │   ├── greeting/         # Interview greeting
-│   │   ├── synthesis/        # Individual + aggregate analysis
-│   │   ├── studies/          # Study CRUD operations
-│   │   ├── generate-link/    # Participant URL generation
-│   │   ├── interviews/       # Interview CRUD + export
-│   │   ├── auth/             # Authentication
-│   │   └── config/           # API key status check
-│   ├── setup/                # Study configuration
-│   ├── consent/              # Participant consent
-│   ├── interview/            # Interview chat
-│   ├── synthesis/            # Analysis view
-│   ├── export/               # Data export
-│   ├── dashboard/            # Researcher dashboard
-│   ├── studies/              # Study list + detail views
-│   ├── login/                # Researcher login
-│   └── p/[token]/            # Participant entry point
-├── components/               # React components
-├── hooks/                    # Custom React hooks
-├── lib/                      # Server-side utilities
-│   ├── ai.ts                 # AI provider abstraction
-│   ├── providers/            # Gemini & Claude implementations
-│   └── kv.ts                 # Vercel KV client
-├── utils/                    # Client-side utilities
-├── services/                 # Client-side services
-├── store.ts                  # Zustand state management
-├── types.ts                  # TypeScript types
-└── middleware.ts             # Auth protection
-```
-
-## AI Provider Configuration
-
-### Default: Gemini
-
-The app uses Gemini by default for all AI operations:
-- Interview responses
-- Greeting generation
-- Interview synthesis
-
-### Model Selection
-
-Models can be selected at two levels:
-
-1. **Per-study (UI)**: Choose a model in the Study Setup page for each study
-2. **Environment default**: Set default models via environment variables
-
-**Priority:** Study UI selection > Provider-specific env var > Legacy `AI_MODEL` > Default
-
-#### Environment Variables
-
-```env
-# Gemini default model
-GEMINI_MODEL=gemini-2.5-flash
-
-# Claude default model
-CLAUDE_MODEL=claude-sonnet-4-5
-
-# Legacy (deprecated - use provider-specific vars above)
-AI_MODEL=gemini-2.5-flash
-```
-
-#### Available Models
-
-**Gemini:**
-
-| Model | Description |
-|-------|-------------|
-| `gemini-2.5-flash` | Fast, cost-effective (default) |
-| `gemini-2.5-pro` | Higher quality |
-| `gemini-3-pro-preview` | Most intelligent (preview, may require allowlisting) |
-
-**Claude:**
-
-| Model | Description | Pricing |
-|-------|-------------|---------|
-| `claude-haiku-4-5` | Fastest | $1/$5 per MTok |
-| `claude-sonnet-4-5` | Balanced (default) | $3/$15 per MTok |
-| `claude-opus-4-5` | Most capable | $15/$75 per MTok |
-
-**Note:** Preview models may require API access approval. Check [Google AI docs](https://ai.google.dev/gemini-api/docs/models) and [Anthropic docs](https://docs.anthropic.com/en/docs/about-claude/models) for the latest model availability.
-
-### Optional: Claude for Interviews
-
-To use Claude instead of Gemini:
-
-```env
-AI_PROVIDER=claude
-ANTHROPIC_API_KEY=your-claude-api-key
-CLAUDE_MODEL=claude-sonnet-4-5
-```
-
-### AI Reasoning Mode
-
-The app automatically uses enhanced reasoning (thinking mode) for analytical operations like synthesis, while keeping interviews fast and conversational.
-
-**Default Behavior:**
-
-| Operation | Reasoning | Model Used |
-|-----------|-----------|------------|
-| Interview responses | OFF | User-selected model |
-| Greeting generation | OFF | User-selected model |
-| Per-interview synthesis | ON (high) | Auto-upgraded (Gemini 3 Pro / Claude Opus) |
-| Aggregate synthesis | ON (high) | Auto-upgraded |
-| Follow-up study generation | ON (high) | Auto-upgraded |
-
-**Per-Study Override:**
-
-In Study Setup, you can override the default behavior:
-- **Automatic (recommended)**: Use defaults above
-- **Always enabled**: Force reasoning ON for all operations (slower interviews)
-- **Always disabled**: Force reasoning OFF for all operations (faster but less thorough synthesis)
-
-**Cost Implications:**
-- Synthesis operations automatically use premium models for best quality
-- Gemini: Uses `gemini-3-pro-preview` for synthesis
-- Claude: Uses `claude-opus-4-5` ($15/$75 per MTok) for synthesis
-- Reasoning tokens count toward billing
-
-**Troubleshooting:**
-- If synthesis fails silently, check API quotas for premium models
-- `gemini-3-pro-preview` may require allowlisting in Google AI Studio
-- Claude Opus ($15/$75/MTok) is used for synthesis - monitor costs
-- Set reasoning to "Always disabled" if you want to use your selected model without upgrades
-
-## Configuring API Keys
-
-API keys are managed through environment variables in your Vercel dashboard:
-
-1. Go to your Vercel project → **Settings** → **Environment Variables**
-2. Add or update the required variables
-3. **Redeploy** for changes to take effect (Production deployments pick up new values automatically)
-
-### Required Keys
-
-| Variable | Purpose |
-|----------|---------|
-| `GEMINI_API_KEY` | Powers AI interviews (server-side) |
-| `ADMIN_PASSWORD` | Protects researcher dashboard |
-
-### Optional Keys
-
-| Variable | Purpose | When Needed |
-|----------|---------|-------------|
-| `ANTHROPIC_API_KEY` | Use Claude for interviews | When AI Provider is set to "Claude" |
-| `GEMINI_MODEL` | Override default Gemini model | To change from `gemini-2.5-flash` |
-| `CLAUDE_MODEL` | Override default Claude model | To change from `claude-sonnet-4-5` |
-| `SESSION_SECRET` | Separate session signing key | Advanced: separate from ADMIN_PASSWORD |
-| `PARTICIPANT_TOKEN_SECRET` | Separate token signing key | Advanced: separate from ADMIN_PASSWORD |
-
-### Getting API Keys
-
-- **Gemini**: [Google AI Studio](https://aistudio.google.com/apikey) - Free tier available
-- **Claude**: [Anthropic Console](https://console.anthropic.com/) - Requires account with credits
-
-## Link Management
-
-### Link Expiration
-
-When creating a study, you can set participant links to expire after:
-
-- 7 days
-- 30 days
-- 90 days
-- Never (default)
-
-Expired links show an error message directing participants to request a new link.
-
-### Link Revocation
-
-From the Study Detail page, you can instantly revoke all participant links by toggling "Links Enabled" off. This is useful if:
-
-- You've finished data collection
-- You suspect the link has been shared inappropriately
-- You need to pause the study temporarily
-
-## Security
-
-### API Key Protection
-
-- **Server-side keys** (`GEMINI_API_KEY`, `ANTHROPIC_API_KEY`): Stored as environment variables, never exposed to browser
-- **Participant URLs**: Signed JWT tokens that cannot be tampered with
-- **Dashboard**: Password-protected with HTTP-only cookie authentication
-- **Data**: Stored in Vercel KV (Redis) with encrypted connections
-
-## License
-
-MIT
-
-## Contributing
-
-Contributions welcome! Please read the contributing guidelines before submitting PRs.
+私有项目,提交评审使用。

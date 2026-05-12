@@ -166,7 +166,7 @@ const Onboarding: React.FC = () => {
                     Welcome{profile?.name ? `, ${profile.name.split(' ')[0]}` : ''}!
                   </h1>
                   <p className="text-stone-400 mt-3 leading-relaxed">
-                    Let&apos;s get you set up. OpenInterviewer uses a <strong className="text-stone-300">Bring Your Own Storage</strong> model &mdash;
+                    Let&apos;s get you set up. Listen uses a <strong className="text-stone-300">Bring Your Own Storage</strong> model &mdash;
                     your data stays in your own infrastructure, giving you full control over your research data.
                   </p>
                 </div>
