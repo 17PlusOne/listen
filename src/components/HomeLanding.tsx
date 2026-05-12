@@ -167,13 +167,13 @@ const HomeLanding: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { titleKey: 'template1Title', descKey: 'template1Desc', tag: locale === 'zh' ? '商业化' : 'Monetization' },
-              { titleKey: 'template2Title', descKey: 'template2Desc', tag: locale === 'zh' ? '留存' : 'Retention' },
-              { titleKey: 'template3Title', descKey: 'template3Desc', tag: locale === 'zh' ? '新人' : 'Onboarding' },
+              { templateId: 'brand-deal-decision', titleKey: 'template1Title', descKey: 'template1Desc', tag: locale === 'zh' ? '商业化' : 'Monetization' },
+              { templateId: 'creator-dropoff', titleKey: 'template2Title', descKey: 'template2Desc', tag: locale === 'zh' ? '留存' : 'Retention' },
+              { templateId: 'new-creator-onboarding', titleKey: 'template3Title', descKey: 'template3Desc', tag: locale === 'zh' ? '新人' : 'Onboarding' },
             ].map((t, i) => (
               <motion.button
                 key={i}
-                onClick={() => router.push('/login?redirect=%2Fsetup')}
+                onClick={() => router.push(`/login?redirect=${encodeURIComponent(`/setup?template=${t.templateId}`)}`)}
                 initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}

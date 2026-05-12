@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useStore } from '@/store';
 import { generateParticipantLink } from '@/services/geminiService';
 import { StudyConfig, ProfileField, AIBehavior, AIProviderType, LinkExpirationOption, GEMINI_MODELS, CLAUDE_MODELS, DEFAULT_GEMINI_MODEL, DEFAULT_CLAUDE_MODEL } from '@/types';
+import { getTemplateById, templateToPrefill } from '@/lib/templates';
 import {
   FileText,
   Plus,
@@ -148,8 +149,29 @@ const StudySetup: React.FC = () => {
     }
   }, [isAuthenticated]);
 
-  // Check for follow-up or edit prefill on mount
+  // Check for follow-up / edit / template prefill on mount
   useEffect(() => {
+    // 模板注入:从首页或登录跳转过来的 ?template=<id>
+    const templateId = searchParams.get('template');
+    if (templateId) {
+      const tpl = getTemplateById(templateId);
+      if (tpl) {
+        const config = templateToPrefill(tpl);
+        if (config.name) setName(config.name);
+        if (config.description) setDescription(config.description);
+        if (config.researchQuestion) setResearchQuestion(config.researchQuestion);
+        if (config.coreQuestions?.length) setCoreQuestions(config.coreQuestions);
+        if (config.topicAreas?.length) setTopicAreas(config.topicAreas);
+        if (config.profileSchema?.length) setProfileSchema(config.profileSchema);
+        if (config.aiBehavior) setAiBehavior(config.aiBehavior);
+        if (config.aiProvider) setAiProvider(config.aiProvider);
+        if (config.enableReasoning !== undefined) setEnableReasoning(config.enableReasoning);
+        if (config.consentText) setConsentText(config.consentText);
+        setIsDirty(true);
+        return;
+      }
+    }
+
     const prefillType = searchParams.get('prefill');
     if (prefillType === 'followup' || prefillType === 'edit') {
       const prefillData = sessionStorage.getItem('prefillStudyConfig');
