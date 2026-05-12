@@ -44,7 +44,7 @@ const PROFILE_PRESETS: ProfileField[] = [
 const StudySetup: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { setStudyConfig, setStep, studyConfig, loadExampleStudy, setViewMode, setParticipantToken } = useStore();
+  const { setStudyConfig, setStep, studyConfig, loadExampleStudy, setViewMode, setIsPreview, setParticipantToken } = useStore();
 
   // Follow-up study state
   const [parentStudyInfo, setParentStudyInfo] = useState<{ id: string; name: string } | null>(null);
@@ -354,6 +354,7 @@ const StudySetup: React.FC = () => {
     }
 
     setIsPreviewLoading(false);
+    setIsPreview(true);
     setViewMode('participant');
     setStep('consent');
     router.push('/consent');

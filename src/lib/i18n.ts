@@ -163,6 +163,15 @@ export const t = {
     zh: '示例数据已加载',
     en: 'Demo data loaded',
   },
+  demoLoadedLocal: {
+    zh: '示例数据已以临时模式加载（未连接存储，刷新后会重置）',
+    en: 'Demo loaded in preview mode (storage not configured, will reset on refresh)',
+  },
+  previewModeLabel: {
+    zh: '预览模式 · 你正以受访者视角查看，回答不会被记录',
+    en: 'Preview mode · You are viewing as a participant; answers will not be saved',
+  },
+  previewExitLabel: { zh: '退出预览', en: 'Exit preview' },
   demoClearedSuccess: { zh: '示例数据已清除', en: 'Demo data cleared' },
   demoConfirmClear: {
     zh: '确认清除全部示例数据吗？',

@@ -20,6 +20,7 @@ export default function ParticipantPage() {
     setStep,
     setStudyConfig,
     setViewMode,
+    setIsPreview,
     setParticipantToken,
     studyConfig
   } = useStore();
@@ -52,6 +53,8 @@ export default function ParticipantPage() {
         // Set the study config from token
         setStudyConfig(tokenData.studyConfig);
         setParticipantToken(token);
+        // 真实受访者入口——显式清除潜在残留的预览状态，避免误显示预览横幅
+        setIsPreview(false);
         setViewMode('participant');
         setStep('consent');
         setLoading(false);

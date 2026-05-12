@@ -86,17 +86,38 @@ const StudyList: React.FC = () => {
     setLoadingDemo(true);
     setDemoMessage(null);
     try {
+      // 先尝试走 KV 路径
       const response = await fetch('/api/demo/seed', { method: 'POST' });
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       if (response.ok) {
         setDemoMessage({ type: 'success', text: tr('demoLoadedSuccess') });
         await loadStudies();
-      } else {
-        setDemoMessage({ type: 'error', text: data.error || tr('demoLoadingFailed') });
+        return;
       }
+      // KV 不可用时降级为纯前端示例模式：直接把 demo 数据注入本地 state
+      if (response.status === 503) {
+        const { DEMO_STUDIES } = await import('@/lib/demoData');
+        setStudies((prev) => {
+          const ids = new Set(prev.map((s) => s.id));
+          return [...prev, ...DEMO_STUDIES.filter((s) => !ids.has(s.id))];
+        });
+        setDemoMessage({ type: 'success', text: tr('demoLoadedLocal') });
+        return;
+      }
+      setDemoMessage({ type: 'error', text: data.error || tr('demoLoadingFailed') });
     } catch (error) {
       console.error('Error loading demo:', error);
-      setDemoMessage({ type: 'error', text: tr('demoLoadingFailed') });
+      // 网络或未知错误，也尝试本地注入托底
+      try {
+        const { DEMO_STUDIES } = await import('@/lib/demoData');
+        setStudies((prev) => {
+          const ids = new Set(prev.map((s) => s.id));
+          return [...prev, ...DEMO_STUDIES.filter((s) => !ids.has(s.id))];
+        });
+        setDemoMessage({ type: 'success', text: tr('demoLoadedLocal') });
+      } catch {
+        setDemoMessage({ type: 'error', text: tr('demoLoadingFailed') });
+      }
     } finally {
       setLoadingDemo(false);
     }
@@ -191,7 +212,7 @@ const StudyList: React.FC = () => {
               ) : (
                 <button
                   onClick={handleLoadDemo}
-                  disabled={loadingDemo || !!kvWarning}
+                  disabled={loadingDemo}
                   className="btn-ghost inline-flex items-center gap-2 disabled:opacity-50"
                 >
                   {loadingDemo ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}

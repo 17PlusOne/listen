@@ -83,6 +83,9 @@ interface ResearchState {
   currentStep: AppStep;
   previousStep: AppStep | null;
   viewMode: ViewMode;
+  // 独立的预览状态：仅在研究员从 StudySetup 点 Preview 时为 true。
+  // 受访者通过 /p/<token> 进入则为 false，以便不显示 Preview Banner。
+  isPreview: boolean;
 
   // Study Configuration (Researcher-defined)
   studyConfig: StudyConfig | null;
@@ -113,6 +116,7 @@ interface ResearchState {
   // Actions - Navigation
   setStep: (step: AppStep) => void;
   setViewMode: (mode: ViewMode) => void;
+  setIsPreview: (preview: boolean) => void;
 
   // Actions - Study Config
   setStudyConfig: (config: StudyConfig) => void;
@@ -158,6 +162,7 @@ export const useStore = create<ResearchState>()(
       currentStep: 'setup',
       previousStep: null,
       viewMode: 'researcher',
+      isPreview: false,
       studyConfig: null,
       participantProfile: null,
       consentGiven: false,
@@ -177,6 +182,7 @@ export const useStore = create<ResearchState>()(
       })),
 
       setViewMode: (mode) => set({ viewMode: mode }),
+      setIsPreview: (preview) => set({ isPreview: preview }),
 
       setStudyConfig: (config) => set({ studyConfig: config }),
 
@@ -302,6 +308,7 @@ export const useStore = create<ResearchState>()(
         currentStep: 'setup',
         previousStep: null,
         viewMode: 'researcher',
+        isPreview: false,
         studyConfig: null,
         participantProfile: null,
         consentGiven: false,
@@ -334,6 +341,7 @@ export const useStore = create<ResearchState>()(
       version: 3,
       partialize: (state) => ({
         viewMode: state.viewMode,
+        isPreview: state.isPreview,
         studyConfig: state.studyConfig,
         participantProfile: state.participantProfile,
         consentGiven: state.consentGiven,
