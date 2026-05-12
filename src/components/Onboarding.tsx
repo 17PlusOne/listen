@@ -380,7 +380,7 @@ const Onboarding: React.FC = () => {
                           <li>Copy REST URL (https://*.upstash.io) and REST Token</li>
                         </ol>
                         <div className="flex items-start gap-1.5 text-amber-400 mt-2">
-                          <span>⚠</span>
+                          <AlertCircle className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
                           <span>Use the REST URL (https://), not the regular Redis URL (redis://)</span>
                         </div>
                         <div className="flex items-start gap-1.5 text-stone-400">

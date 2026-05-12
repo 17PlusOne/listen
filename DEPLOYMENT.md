@@ -2,7 +2,7 @@
 
 > Vercel 一键部署 · 评审环境就绪
 > 预计耗时:**10 分钟**(含 Vercel KV 配置)
-> 必须项打 ⚠️,可选项打 ◎
+> 必须项标 **必填**,可选项标 **可选**
 
 ---
 
@@ -10,15 +10,15 @@
 
 | 变量 | 必须 | 用途 | 获取方式 |
 |------|------|------|---------|
-| `GEMINI_API_KEY` | ⚠️ 必填 | 驱动访谈员「听见」的对话与聚合分析 | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) 免费申请 |
-| `ADMIN_PASSWORD` | ⚠️ 必填 | 研究员后台登录密码(自己设,至少 12 位) | 自己设,避免使用真实业务密码 |
-| `JWT_SECRET` | ⚠️ 必填 | 签发管理员 session,保护后台路由 | `openssl rand -base64 32` 生成 |
-| `BCRYPT_PEPPER` | ⚠️ 必填 | 密码加盐用,部署后不可更改 | `openssl rand -base64 32` 生成 |
-| `ANTHROPIC_API_KEY` | ◎ 可选 | 如果要切换到 Claude 做访谈 | [console.anthropic.com](https://console.anthropic.com) |
-| `AI_PROVIDER` | ◎ 可选 | `gemini`(默认)或 `claude` | 默认走 Gemini 即可 |
-| `AI_MODEL` | ◎ 可选 | 覆盖默认模型选择 | 见 README 模型说明 |
-| `KV_REST_API_URL` | ◎ 强烈建议 | Vercel KV(Upstash Redis)持久化研究与访谈 | Vercel Storage 自动注入 |
-| `KV_REST_API_TOKEN` | ◎ 强烈建议 | 同上 | Vercel Storage 自动注入 |
+| `GEMINI_API_KEY` | **必填** | 驱动访谈员「听见」的对话与聚合分析 | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) 免费申请 |
+| `ADMIN_PASSWORD` | **必填** | 研究员后台登录密码(自己设,至少 12 位) | 自己设,避免使用真实业务密码 |
+| `JWT_SECRET` | **必填** | 签发管理员 session,保护后台路由 | `openssl rand -base64 32` 生成 |
+| `BCRYPT_PEPPER` | **必填** | 密码加盐用,部署后不可更改 | `openssl rand -base64 32` 生成 |
+| `ANTHROPIC_API_KEY` | 可选 | 如果要切换到 Claude 做访谈 | [console.anthropic.com](https://console.anthropic.com) |
+| `AI_PROVIDER` | 可选 | `gemini`(默认)或 `claude` | 默认走 Gemini 即可 |
+| `AI_MODEL` | 可选 | 覆盖默认模型选择 | 见 README 模型说明 |
+| `KV_REST_API_URL` | 强烈建议 | Vercel KV(Upstash Redis)持久化研究与访谈 | Vercel Storage 自动注入 |
+| `KV_REST_API_TOKEN` | 强烈建议 | 同上 | Vercel Storage 自动注入 |
 
 **关于 KV:** 不配置 KV 时项目仍可运行,但**研究和访谈不会持久化**(刷新页面即消失),仅适合 Demo 演示。**评审建议配 KV**,因为示例数据需要在多次访问间稳定存在。
 

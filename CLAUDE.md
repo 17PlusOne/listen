@@ -1,7 +1,7 @@
-# OpenInterviewer
+# Listen · 听见
 
 ## Stack
-- Next.js 14 App Router, TypeScript, Tailwind CSS (stone palette), Framer Motion
+- Next.js 14 App Router, TypeScript, Tailwind CSS (听见品牌调色 + paper/ink/accent), Framer Motion
 - `@upstash/redis` for KV storage (not `@vercel/kv` — supports dynamic client URLs)
 - `jose` for JWT signing/verification, `arctic` v3 for OAuth
 - `bun` for package management (see global CLAUDE.md)

@@ -139,7 +139,7 @@ ${
 
 【背景字段】
 ${formatProfileFields(studyConfig.profileSchema, participantProfile, 'zh')}
-${pendingRequired.length > 0 ? `\n⚠️ 还有 ${pendingRequired.length} 个必填背景字段未收集。在拿到或对方明确拒绝之前,保持在 background 阶段。` : ''}
+${pendingRequired.length > 0 ? `\n[注意] 还有 ${pendingRequired.length} 个必填背景字段未收集。在拿到或对方明确拒绝之前,保持在 background 阶段。` : ''}
 
 【受访者已透露的背景】
 ${participantProfile?.rawContext || '尚无'}
@@ -199,7 +199,7 @@ ${
 
 PROFILE FIELDS
 ${formatProfileFields(studyConfig.profileSchema, participantProfile, 'en')}
-${pendingRequired.length > 0 ? `\n⚠️ ${pendingRequired.length} required fields still pending. Stay in background until collected or explicitly refused.` : ''}
+${pendingRequired.length > 0 ? `\n[NOTE] ${pendingRequired.length} required fields still pending. Stay in background until collected or explicitly refused.` : ''}
 
 BACKGROUND ALREADY SHARED
 ${participantProfile?.rawContext || 'None yet.'}

@@ -8,7 +8,7 @@ import Consent from '@/components/Consent';
 import InterviewChat from '@/components/InterviewChat';
 import Synthesis from '@/components/Synthesis';
 import Export from '@/components/Export';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertTriangle } from 'lucide-react';
 
 export default function ParticipantPage() {
   const params = useParams();
@@ -71,10 +71,10 @@ export default function ParticipantPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
         <div className="text-center">
-          <Loader2 size={48} className="animate-spin text-stone-400 mx-auto mb-4" />
-          <p className="text-stone-400">Loading interview...</p>
+          <Loader2 size={48} className="animate-spin text-listen-accent mx-auto mb-4" />
+          <p className="text-listen-inkMute">正在载入访谈…</p>
         </div>
       </div>
     );
@@ -83,15 +83,15 @@ export default function ParticipantPage() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center p-8">
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center p-8">
         <div className="max-w-md text-center">
-          <div className="w-16 h-16 rounded-full bg-stone-800 flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">⚠️</span>
+          <div className="w-16 h-16 rounded-full bg-listen-accentSoft flex items-center justify-center mx-auto mb-5 border border-listen-accentDeep/20">
+            <AlertTriangle size={28} className="text-listen-accentDeep" />
           </div>
-          <h1 className="text-xl font-semibold text-white mb-2">Unable to Load Interview</h1>
-          <p className="text-stone-400 mb-6">{error}</p>
-          <p className="text-stone-500 text-sm">
-            Please check that you have the correct link or contact the researcher.
+          <h1 className="font-serif text-2xl text-listen-ink mb-2">访谈链接无法载入</h1>
+          <p className="text-listen-inkSoft mb-6">{error}</p>
+          <p className="text-listen-inkMute text-sm">
+            请核实你拿到的是完整链接，或联系发起研究的作者。
           </p>
         </div>
       </div>
@@ -101,8 +101,8 @@ export default function ParticipantPage() {
   // No study config loaded
   if (!studyConfig) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
-        <p className="text-stone-400">Study configuration not found.</p>
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <p className="text-listen-inkMute">未找到访谈配置。</p>
       </div>
     );
   }
