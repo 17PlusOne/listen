@@ -4,19 +4,20 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useStore } from '@/store';
-import { Shield, ArrowRight, ArrowLeft, MessageSquare, Clock, HelpCircle } from 'lucide-react';
+import { useLocale } from './LocaleProvider';
+import BrandHeader from './BrandHeader';
+import { ArrowRight, ArrowLeft, Clock, ShieldCheck, MessageCircle } from 'lucide-react';
 
 const Consent: React.FC = () => {
   const router = useRouter();
+  const { tr } = useLocale();
   const { studyConfig, giveConsent, setStep, viewMode, initializeProfile } = useStore();
 
   const handleConsent = () => {
     giveConsent();
-    // Initialize profile structure from study schema
     if (studyConfig?.profileSchema) {
       initializeProfile(studyConfig.profileSchema);
     }
-    // Skip directly to interview (merged intake/profile into conversation)
     setStep('interview');
     router.push('/interview');
   };
@@ -28,111 +29,112 @@ const Consent: React.FC = () => {
 
   if (!studyConfig) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
-        <p className="text-stone-400">No study configured. Please set up a study first.</p>
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <p className="text-listen-inkMute font-serif text-lg">{tr('consentMissingStudy')}</p>
       </div>
     );
   }
 
+  const steps = [
+    { title: tr('consentStep1Title'), desc: tr('consentStep1Desc') },
+    {
+      title: tr('consentStep2Title').replace('{count}', String(studyConfig.coreQuestions.length)),
+      desc: tr('consentStep2Desc'),
+    },
+    { title: tr('consentStep3Title'), desc: tr('consentStep3Desc') },
+    { title: tr('consentStep4Title'), desc: tr('consentStep4Desc') },
+  ];
+
   return (
-    <div className="min-h-screen bg-stone-900 flex items-center justify-center p-8">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-lg w-full"
-      >
-        <div className="bg-stone-800/50 rounded-xl border border-stone-700 overflow-hidden">
-          {/* Header */}
-          <div className="bg-stone-700 p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <Shield size={28} className="text-stone-300" />
-              <h1 className="text-2xl font-bold text-white">Research Consent</h1>
-            </div>
-            <p className="text-stone-400 text-sm">
-              {studyConfig.name}
-            </p>
+    <div className="min-h-screen bg-listen-paper">
+      <BrandHeader minimal />
+
+      <main className="max-w-3xl mx-auto px-6 sm:px-10 py-12 sm:py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="eyebrow mb-4">{tr('consentEyebrow')}</div>
+          <h1 className="font-serif text-[42px] sm:text-[56px] leading-[1.05] tracking-tight text-listen-ink mb-2">
+            {tr('consentTitle')}
+          </h1>
+          <p className="text-[15px] text-listen-inkMute mb-10">
+            {studyConfig.name}
+          </p>
+
+          {/* Intro */}
+          <div className="space-y-5 text-[17px] leading-[1.8] text-listen-inkSoft mb-12">
+            <p>{tr('consentIntroOne')}</p>
+            <p>{tr('consentIntroTwo')}</p>
           </div>
 
-          {/* Content */}
-          <div className="p-6 space-y-6">
-            <div className="prose prose-sm max-w-none text-stone-300">
-              <p className="whitespace-pre-wrap">{studyConfig.consentText}</p>
+          {/* 研究员自定义同意文案 (如有) */}
+          {studyConfig.consentText && studyConfig.consentText.trim().length > 0 && (
+            <div className="paper-card p-6 mb-10">
+              <div className="text-[12px] tracking-[0.18em] uppercase text-listen-inkMute mb-3">
+                {tr('consentPrivacyTitle')}
+              </div>
+              <p className="text-[15px] text-listen-inkSoft leading-[1.85] whitespace-pre-wrap">
+                {studyConfig.consentText}
+              </p>
+            </div>
+          )}
+
+          {/* Structure */}
+          <div className="paper-card p-7 sm:p-9 mb-10">
+            <div className="flex items-center gap-3 mb-7">
+              <MessageCircle size={20} className="text-listen-accent" />
+              <h3 className="font-serif text-[22px] text-listen-ink">{tr('consentStructureTitle')}</h3>
             </div>
 
-            {/* Interview Structure Foreshadowing */}
-            <div className="bg-stone-800 rounded-xl p-5 space-y-4">
-              <h3 className="font-semibold text-stone-100 flex items-center gap-2">
-                <MessageSquare size={18} className="text-stone-400" />
-                Interview Structure
-              </h3>
-
-              <div className="space-y-3 text-sm">
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-stone-700 flex items-center justify-center text-xs text-stone-400 flex-shrink-0 mt-0.5">1</div>
-                  <div>
-                    <div className="text-stone-200">Brief background questions</div>
-                    <div className="text-stone-500 text-xs">Help us understand your context</div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-stone-700 flex items-center justify-center text-xs text-stone-400 flex-shrink-0 mt-0.5">2</div>
-                  <div>
-                    <div className="text-stone-200">{studyConfig.coreQuestions.length} core questions about your experiences</div>
-                    <div className="text-stone-500 text-xs">The heart of the interview</div>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-stone-700 flex items-center justify-center text-xs text-stone-400 flex-shrink-0 mt-0.5">
-                    <HelpCircle size={12} />
+            <ol className="space-y-6">
+              {steps.map((s, i) => (
+                <li key={i} className="flex items-start gap-5">
+                  <div className="font-serif text-[28px] leading-none italic font-light text-listen-accent/70 w-9 flex-shrink-0 mt-1">
+                    {String(i + 1).padStart(2, '0')}
                   </div>
                   <div>
-                    <div className="text-stone-200">The AI may ask follow-up questions</div>
-                    <div className="text-stone-500 text-xs">To better understand your perspective</div>
+                    <div className="font-serif text-[18px] text-listen-ink mb-1">{s.title}</div>
+                    <div className="text-[14px] text-listen-inkMute leading-relaxed">{s.desc}</div>
                   </div>
-                </div>
+                </li>
+              ))}
+            </ol>
 
-                <div className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-stone-700 flex items-center justify-center text-xs text-stone-400 flex-shrink-0 mt-0.5">3</div>
-                  <div>
-                    <div className="text-stone-200">A final question for your feedback</div>
-                    <div className="text-stone-500 text-xs">Your thoughts on the interview itself</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 pt-2 border-t border-stone-700 text-stone-400 text-sm">
-                <Clock size={14} />
-                <span>Estimated time: 10-15 minutes</span>
-              </div>
+            <div className="flex items-center gap-2 mt-8 pt-6 border-t border-listen-lineSoft text-[13px] text-listen-inkMute">
+              <Clock size={14} />
+              <span>{tr('consentEstimate')}</span>
             </div>
+          </div>
 
-            <div className="bg-stone-800 border border-stone-600 rounded-xl p-4 text-sm text-stone-300">
-              <strong className="text-stone-100">Privacy:</strong> Your responses will be used for research purposes only.
-              No personally identifying information will be shared without your consent.
+          {/* Privacy */}
+          <div className="flex items-start gap-4 mb-12 p-5 rounded-2xl bg-listen-paperDeep/60 border border-listen-lineSoft">
+            <ShieldCheck size={20} className="text-listen-mint flex-shrink-0 mt-0.5" />
+            <div>
+              <div className="font-medium text-listen-ink mb-1">{tr('consentPrivacyTitle')}</div>
+              <p className="text-[14px] text-listen-inkSoft leading-relaxed">{tr('consentPrivacyBody')}</p>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="p-6 pt-0 flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             {viewMode !== 'participant' && (
               <button
                 onClick={handleBack}
-                className="px-6 py-3 border border-stone-600 text-stone-400 rounded-xl hover:bg-stone-700 transition-colors flex items-center gap-2"
+                className="btn-secondary inline-flex items-center gap-2"
               >
-                <ArrowLeft size={18} /> Back
+                <ArrowLeft size={16} />
+                {tr('back')}
               </button>
             )}
-            <button
-              onClick={handleConsent}
-              className="flex-1 py-3 bg-stone-600 hover:bg-stone-500 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
-            >
-              I Consent - Begin Interview <ArrowRight size={18} />
+            <button onClick={handleConsent} className="btn-primary flex-1 inline-flex items-center justify-center gap-2 text-[16px] py-4">
+              {tr('consentBeginCta')}
+              <ArrowRight size={18} />
             </button>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      </main>
     </div>
   );
 };

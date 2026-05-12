@@ -508,7 +508,7 @@ const StudySetup: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-stone-900 p-8">
+    <div className="min-h-screen bg-listen-paper p-8">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -518,20 +518,20 @@ const StudySetup: React.FC = () => {
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={() => router.push('/studies')}
-              className="p-2 text-stone-400 hover:text-stone-300 rounded-lg hover:bg-stone-800 transition-colors"
+              className="p-2 text-listen-inkMute hover:text-listen-inkSoft rounded-lg hover:bg-white transition-colors"
               title="Back to All Studies"
             >
               <ArrowLeft size={20} />
             </button>
-            <div className="w-10 h-10 rounded-xl bg-stone-700 flex items-center justify-center">
-              <FileText className="text-stone-300" size={20} />
+            <div className="w-10 h-10 rounded-xl bg-listen-paperDeep flex items-center justify-center">
+              <FileText className="text-listen-inkSoft" size={20} />
             </div>
-            <h1 className="text-3xl font-bold text-white">Study Setup</h1>
+            <h1 className="text-3xl font-bold text-listen-ink">Study Setup</h1>
 
             <div className="flex gap-2 ml-auto">
               <button
                 onClick={loadExampleStudy}
-                className="px-4 py-2 text-sm bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-xl transition-colors flex items-center gap-2"
+                className="px-4 py-2 text-sm bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft rounded-xl transition-colors flex items-center gap-2"
               >
                 <Lightbulb size={16} />
                 Load Example
@@ -545,8 +545,8 @@ const StudySetup: React.FC = () => {
                       savedStudyId && !isDirty
                         ? 'bg-green-900/50 text-green-400 border border-green-700'
                         : saveSuccess
-                        ? 'bg-green-700 text-white'
-                        : 'bg-stone-700 hover:bg-stone-600 text-stone-300'
+                        ? 'bg-green-700 text-listen-ink'
+                        : 'bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft'
                     } ${isSaving || isAuthenticated === null ? 'opacity-50' : ''}`}
                   >
                     {isSaving ? (
@@ -563,7 +563,7 @@ const StudySetup: React.FC = () => {
                   <button
                     onClick={handlePreview}
                     disabled={isPreviewLoading}
-                    className="px-4 py-2 text-sm bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-xl transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 text-sm bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft rounded-xl transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isPreviewLoading ? (
                       <Loader2 size={16} className="animate-spin" />
@@ -576,7 +576,7 @@ const StudySetup: React.FC = () => {
               )}
             </div>
           </div>
-          <p className="text-stone-400 ml-[52px]">
+          <p className="text-listen-inkMute ml-[52px]">
             Configure your research interview study
           </p>
         </motion.div>
@@ -615,15 +615,15 @@ const StudySetup: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-stone-800/50 rounded-2xl border border-stone-700 p-8 space-y-8"
+          className="bg-white rounded-2xl border border-listen-line p-8 space-y-8"
         >
           {/* Follow-up Study Banner */}
           {parentStudyInfo && (
             <div className="bg-blue-900/30 border border-blue-700/50 rounded-xl p-4 flex items-start gap-3">
               <GitBranch size={20} className="text-blue-400 flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-medium text-white">Follow-up Study</h4>
-                <p className="text-sm text-stone-400">
+                <h4 className="font-medium text-listen-ink">Follow-up Study</h4>
+                <p className="text-sm text-listen-inkMute">
                   Based on findings from{' '}
                   <button
                     onClick={() => router.push(`/studies/${parentStudyInfo.id}`)}
@@ -638,13 +638,13 @@ const StudySetup: React.FC = () => {
 
           {/* Basic Info */}
           <div className="space-y-4">
-            <h2 className="font-semibold text-lg text-stone-100 flex items-center gap-2">
-              <Sparkles size={18} className="text-stone-400" />
+            <h2 className="font-semibold text-lg text-listen-ink flex items-center gap-2">
+              <Sparkles size={18} className="text-listen-inkMute" />
               Study Details
             </h2>
 
             <div>
-              <label className="block text-sm font-medium text-stone-300 mb-1">
+              <label className="block text-sm font-medium text-listen-inkSoft mb-1">
                 Study Name *
               </label>
               <input
@@ -652,12 +652,12 @@ const StudySetup: React.FC = () => {
                 value={name}
                 onChange={(e) => { setName(e.target.value); setIsDirty(true); }}
                 placeholder="e.g., AI Adoption in Healthcare"
-                className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-300 mb-1">
+              <label className="block text-sm font-medium text-listen-inkSoft mb-1">
                 Research Question *
               </label>
               <textarea
@@ -665,12 +665,12 @@ const StudySetup: React.FC = () => {
                 onChange={(e) => { setResearchQuestion(e.target.value); setIsDirty(true); }}
                 placeholder="What are you trying to understand?"
                 rows={2}
-                className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent resize-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-stone-300 mb-1">
+              <label className="block text-sm font-medium text-listen-inkSoft mb-1">
                 Description (optional)
               </label>
               <textarea
@@ -678,7 +678,7 @@ const StudySetup: React.FC = () => {
                 onChange={(e) => { setDescription(e.target.value); setIsDirty(true); }}
                 placeholder="Brief context about the study..."
                 rows={2}
-                className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent resize-none"
               />
             </div>
           </div>
@@ -686,29 +686,29 @@ const StudySetup: React.FC = () => {
           {/* Profile Fields */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-lg text-stone-100 flex items-center gap-2">
-                <User size={18} className="text-stone-400" />
+              <h2 className="font-semibold text-lg text-listen-ink flex items-center gap-2">
+                <User size={18} className="text-listen-inkMute" />
                 Profile Fields
               </h2>
               <button
                 onClick={() => addProfileField()}
-                className="text-sm text-stone-400 hover:text-stone-300 flex items-center gap-1"
+                className="text-sm text-listen-inkMute hover:text-listen-inkSoft flex items-center gap-1"
               >
                 <Plus size={16} /> Add Custom
               </button>
             </div>
-            <p className="text-sm text-stone-400">
+            <p className="text-sm text-listen-inkMute">
               Information to gather about participants during the interview
             </p>
 
             {availablePresets.length > 0 && (
               <div className="flex flex-wrap gap-2">
-                <span className="text-xs text-stone-500">Quick add:</span>
+                <span className="text-xs text-listen-inkMute">Quick add:</span>
                 {availablePresets.map(preset => (
                   <button
                     key={preset.id}
                     onClick={() => addProfileField(preset)}
-                    className="px-3 py-1 text-xs bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-full transition-colors"
+                    className="px-3 py-1 text-xs bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft rounded-full transition-colors"
                   >
                     + {preset.label}
                   </button>
@@ -720,7 +720,7 @@ const StudySetup: React.FC = () => {
               {profileSchema.map((field) => (
                 <div
                   key={field.id}
-                  className="bg-stone-800 rounded-xl p-4 border border-stone-700"
+                  className="bg-white rounded-xl p-4 border border-listen-line"
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-1 space-y-2">
@@ -729,14 +729,14 @@ const StudySetup: React.FC = () => {
                         value={field.label}
                         onChange={(e) => updateProfileField(field.id, { label: e.target.value })}
                         placeholder="Field label (e.g., Current Role)"
-                        className="w-full px-3 py-2 rounded-lg bg-stone-900 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-stone-500 text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-listen-paper border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-1 focus:ring-listen-accent text-sm"
                       />
                       <input
                         type="text"
                         value={field.extractionHint}
                         onChange={(e) => updateProfileField(field.id, { extractionHint: e.target.value })}
                         placeholder="Hint for AI (e.g., Their job title or position)"
-                        className="w-full px-3 py-2 rounded-lg bg-stone-900 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-1 focus:ring-stone-500 text-sm"
+                        className="w-full px-3 py-2 rounded-lg bg-listen-paper border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-1 focus:ring-listen-accent text-sm"
                       />
                     </div>
                     <div className="flex items-center gap-2">
@@ -744,8 +744,8 @@ const StudySetup: React.FC = () => {
                         onClick={() => toggleFieldRequired(field.id)}
                         className={`px-2 py-1 text-xs rounded flex items-center gap-1 ${
                           field.required
-                            ? 'bg-stone-600 text-stone-200'
-                            : 'bg-stone-700 text-stone-400'
+                            ? 'bg-listen-accent text-listen-ink'
+                            : 'bg-listen-paperDeep text-listen-inkMute'
                         }`}
                         title={field.required ? 'Required field' : 'Optional field'}
                       >
@@ -754,7 +754,7 @@ const StudySetup: React.FC = () => {
                       </button>
                       <button
                         onClick={() => removeProfileField(field.id)}
-                        className="p-1.5 text-stone-500 hover:text-red-400"
+                        className="p-1.5 text-listen-inkMute hover:text-red-400"
                       >
                         <X size={16} />
                       </button>
@@ -764,7 +764,7 @@ const StudySetup: React.FC = () => {
               ))}
 
               {profileSchema.length === 0 && (
-                <div className="text-center py-4 text-stone-500 text-sm">
+                <div className="text-center py-4 text-listen-inkMute text-sm">
                   No profile fields yet. Add some above to gather participant information.
                 </div>
               )}
@@ -774,34 +774,34 @@ const StudySetup: React.FC = () => {
           {/* Core Questions */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-lg text-stone-100">
+              <h2 className="font-semibold text-lg text-listen-ink">
                 Core Questions
               </h2>
               <button
                 onClick={addQuestion}
-                className="text-sm text-stone-400 hover:text-stone-300 flex items-center gap-1"
+                className="text-sm text-listen-inkMute hover:text-listen-inkSoft flex items-center gap-1"
               >
                 <Plus size={16} /> Add Question
               </button>
             </div>
-            <p className="text-sm text-stone-400">
+            <p className="text-sm text-listen-inkMute">
               Must-ask questions for your interview
             </p>
             <div className="space-y-2">
               {coreQuestions.map((q, i) => (
                 <div key={i} className="flex gap-2 items-start">
-                  <span className="text-stone-500 text-sm pt-3 w-6 text-right">{i + 1}.</span>
+                  <span className="text-listen-inkMute text-sm pt-3 w-6 text-right">{i + 1}.</span>
                   <textarea
                     value={q}
                     onChange={(e) => updateQuestion(i, e.target.value)}
                     placeholder={`Question ${i + 1}...`}
                     rows={2}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 resize-none"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-white border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent resize-none"
                   />
                   {coreQuestions.length > 1 && (
                     <button
                       onClick={() => removeQuestion(i)}
-                      className="p-2.5 text-stone-500 hover:text-red-400 mt-1"
+                      className="p-2.5 text-listen-inkMute hover:text-red-400 mt-1"
                     >
                       <X size={18} />
                     </button>
@@ -814,34 +814,34 @@ const StudySetup: React.FC = () => {
           {/* Topic Areas */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-lg text-stone-100">
+              <h2 className="font-semibold text-lg text-listen-ink">
                 Topic Areas
               </h2>
               <button
                 onClick={addTopic}
-                className="text-sm text-stone-400 hover:text-stone-300 flex items-center gap-1"
+                className="text-sm text-listen-inkMute hover:text-listen-inkSoft flex items-center gap-1"
               >
                 <Plus size={16} /> Add Topic
               </button>
             </div>
-            <p className="text-sm text-stone-400">
+            <p className="text-sm text-listen-inkMute">
               Themes the AI should probe on (e.g., fears, motivations, trade-offs)
             </p>
             <div className="space-y-2">
               {topicAreas.map((t, i) => (
                 <div key={i} className="flex gap-2 items-start">
-                  <span className="text-stone-500 text-sm pt-3 w-6 text-right">{i + 1}.</span>
+                  <span className="text-listen-inkMute text-sm pt-3 w-6 text-right">{i + 1}.</span>
                   <textarea
                     value={t}
                     onChange={(e) => updateTopic(i, e.target.value)}
                     placeholder={`Topic area ${i + 1}...`}
                     rows={2}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 resize-none"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-white border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent resize-none"
                   />
                   {topicAreas.length > 1 && (
                     <button
                       onClick={() => removeTopic(i)}
-                      className="p-2.5 text-stone-500 hover:text-red-400 mt-1"
+                      className="p-2.5 text-listen-inkMute hover:text-red-400 mt-1"
                     >
                       <X size={18} />
                     </button>
@@ -853,8 +853,8 @@ const StudySetup: React.FC = () => {
 
           {/* AI Provider */}
           <div className="space-y-4">
-            <h2 className="font-semibold text-lg text-stone-100">AI Provider</h2>
-            <p className="text-sm text-stone-400">
+            <h2 className="font-semibold text-lg text-listen-ink">AI Provider</h2>
+            <p className="text-sm text-listen-inkMute">
               Choose which AI model powers your interviews
             </p>
             <div className="space-y-2">
@@ -863,8 +863,8 @@ const StudySetup: React.FC = () => {
                   key={option.id}
                   className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
                     aiProvider === option.id
-                      ? 'border-stone-500 bg-stone-700'
-                      : 'border-stone-700 hover:border-stone-600'
+                      ? 'border-listen-accent bg-listen-paperDeep'
+                      : 'border-listen-line hover:border-listen-line'
                   }`}
                 >
                   <input
@@ -877,11 +877,11 @@ const StudySetup: React.FC = () => {
                       setAiModel(option.id === 'claude' ? DEFAULT_CLAUDE_MODEL : DEFAULT_GEMINI_MODEL);
                       setIsDirty(true);
                     }}
-                    className="mt-1 accent-stone-500"
+                    className="mt-1 accent-listen-accent"
                   />
                   <div>
-                    <div className="font-medium text-stone-100">{option.label}</div>
-                    <div className="text-xs text-stone-400">{option.desc}</div>
+                    <div className="font-medium text-listen-ink">{option.label}</div>
+                    <div className="text-xs text-listen-inkMute">{option.desc}</div>
                   </div>
                 </label>
               ))}
@@ -889,13 +889,13 @@ const StudySetup: React.FC = () => {
 
             {/* Model Selection */}
             <div className="mt-4 space-y-2">
-              <label className="block text-sm font-medium text-stone-300">
+              <label className="block text-sm font-medium text-listen-inkSoft">
                 Model
               </label>
               <select
                 value={aiModel}
                 onChange={(e) => { setAiModel(e.target.value); setIsDirty(true); }}
-                className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent"
               >
                 {(aiProvider === 'gemini' ? GEMINI_MODELS : CLAUDE_MODELS).map((model) => (
                   <option key={model.id} value={model.id}>
@@ -903,14 +903,14 @@ const StudySetup: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-listen-inkMute">
                 {(aiProvider === 'gemini' ? GEMINI_MODELS : CLAUDE_MODELS).find(m => m.id === aiModel)?.desc || ''}
               </p>
             </div>
 
             {/* AI Reasoning Mode */}
             <div className="mt-4 space-y-2">
-              <label className="block text-sm font-medium text-stone-300">
+              <label className="block text-sm font-medium text-listen-inkSoft">
                 AI Reasoning Mode
               </label>
               <select
@@ -920,13 +920,13 @@ const StudySetup: React.FC = () => {
                   setEnableReasoning(v === 'auto' ? undefined : v === 'on');
                   setIsDirty(true);
                 }}
-                className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent"
               >
                 <option value="auto">Automatic (recommended)</option>
                 <option value="on">Always enabled</option>
                 <option value="off">Always disabled</option>
               </select>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-listen-inkMute">
                 Automatic: OFF for interviews (faster responses), ON for synthesis (deeper analysis using premium models - may increase API costs)
               </p>
             </div>
@@ -937,8 +937,8 @@ const StudySetup: React.FC = () => {
                 <AlertTriangle size={18} className="text-amber-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-amber-200 text-sm">Anthropic API Key Missing</h4>
-                  <p className="text-xs text-stone-400 mt-1">
-                    Claude interviews require the <code className="text-stone-300">ANTHROPIC_API_KEY</code> environment variable.
+                  <p className="text-xs text-listen-inkMute mt-1">
+                    Claude interviews require the <code className="text-listen-inkSoft">ANTHROPIC_API_KEY</code> environment variable.
                     Set this in your Vercel dashboard under Project Settings → Environment Variables.
                   </p>
                   <a
@@ -956,15 +956,15 @@ const StudySetup: React.FC = () => {
 
           {/* AI Behavior */}
           <div className="space-y-4">
-            <h2 className="font-semibold text-lg text-stone-100">AI Interview Style</h2>
+            <h2 className="font-semibold text-lg text-listen-ink">AI Interview Style</h2>
             <div className="space-y-2">
               {behaviorOptions.map((option) => (
                 <label
                   key={option.id}
                   className={`flex items-start gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all ${
                     aiBehavior === option.id
-                      ? 'border-stone-500 bg-stone-700'
-                      : 'border-stone-700 hover:border-stone-600'
+                      ? 'border-listen-accent bg-listen-paperDeep'
+                      : 'border-listen-line hover:border-listen-line'
                   }`}
                 >
                   <input
@@ -972,11 +972,11 @@ const StudySetup: React.FC = () => {
                     name="aiBehavior"
                     checked={aiBehavior === option.id}
                     onChange={() => { setAiBehavior(option.id); setIsDirty(true); }}
-                    className="mt-1 accent-stone-500"
+                    className="mt-1 accent-listen-accent"
                   />
                   <div>
-                    <div className="font-medium text-stone-100">{option.label}</div>
-                    <div className="text-xs text-stone-400">{option.desc}</div>
+                    <div className="font-medium text-listen-ink">{option.label}</div>
+                    <div className="text-xs text-listen-inkMute">{option.desc}</div>
                   </div>
                 </label>
               ))}
@@ -985,21 +985,21 @@ const StudySetup: React.FC = () => {
 
           {/* Link Settings */}
           <div className="space-y-4">
-            <h2 className="font-semibold text-lg text-stone-100 flex items-center gap-2">
-              <Clock size={18} className="text-stone-400" />
+            <h2 className="font-semibold text-lg text-listen-ink flex items-center gap-2">
+              <Clock size={18} className="text-listen-inkMute" />
               Link Settings
             </h2>
-            <p className="text-sm text-stone-400">
+            <p className="text-sm text-listen-inkMute">
               Configure when participant links expire. You can also revoke links from the study detail page.
             </p>
 
             <div className="space-y-3">
               <label className="block">
-                <span className="text-sm font-medium text-stone-300">Link Expiration</span>
+                <span className="text-sm font-medium text-listen-inkSoft">Link Expiration</span>
                 <select
                   value={linkExpiration}
                   onChange={(e) => { setLinkExpiration(e.target.value as LinkExpirationOption); setIsDirty(true); }}
-                  className="mt-1 w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500"
+                  className="mt-1 w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent"
                 >
                   <option value="never">Never expire</option>
                   <option value="7days">Expire after 7 days</option>
@@ -1007,7 +1007,7 @@ const StudySetup: React.FC = () => {
                   <option value="90days">Expire after 90 days</option>
                 </select>
               </label>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-listen-inkMute">
                 Expired links will show an error message when participants try to access them.
               </p>
             </div>
@@ -1015,20 +1015,20 @@ const StudySetup: React.FC = () => {
 
           {/* Consent Text */}
           <div className="space-y-4">
-            <h2 className="font-semibold text-lg text-stone-100">Consent Text</h2>
+            <h2 className="font-semibold text-lg text-listen-ink">Consent Text</h2>
             <textarea
               value={consentText}
               onChange={(e) => { setConsentText(e.target.value); setIsDirty(true); }}
               rows={4}
-              className="w-full px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 resize-none text-sm"
+              className="w-full px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-ink placeholder-listen-inkGhost focus:outline-none focus:ring-2 focus:ring-listen-accent focus:border-listen-accent resize-none text-sm"
             />
           </div>
 
           {/* Generate Participant Link */}
           {isValid && (
-            <div className="space-y-4 pt-4 border-t border-stone-700">
-              <h2 className="font-semibold text-lg text-stone-100 flex items-center gap-2">
-                <LinkIcon size={18} className="text-stone-400" />
+            <div className="space-y-4 pt-4 border-t border-listen-line">
+              <h2 className="font-semibold text-lg text-listen-ink flex items-center gap-2">
+                <LinkIcon size={18} className="text-listen-inkMute" />
                 Participant Link
               </h2>
 
@@ -1039,29 +1039,29 @@ const StudySetup: React.FC = () => {
                       type="text"
                       value={participantLink}
                       readOnly
-                      className="flex-1 px-4 py-3 rounded-xl bg-stone-800 border border-stone-600 text-stone-300 text-sm font-mono"
+                      className="flex-1 px-4 py-3 rounded-xl bg-white border border-listen-line text-listen-inkSoft text-sm font-mono"
                     />
                     <button
                       type="button"
                       onClick={handleCopyLink}
-                      className="px-4 py-3 bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-xl transition-colors flex items-center gap-2"
+                      className="px-4 py-3 bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft rounded-xl transition-colors flex items-center gap-2"
                     >
                       {linkCopied ? <Check size={18} /> : <Copy size={18} />}
                       {linkCopied ? 'Copied!' : 'Copy'}
                     </button>
                   </div>
-                  <p className="text-xs text-stone-500">
+                  <p className="text-xs text-listen-inkMute">
                     Share this link with participants. The study configuration is embedded in the URL.
                   </p>
                 </div>
               ) : isAuthenticated === false || linkError === 'auth' ? (
                 <div className="space-y-3">
-                  <div className="bg-stone-800 border border-stone-600 rounded-xl p-4 text-sm text-stone-300">
+                  <div className="bg-white border border-listen-line rounded-xl p-4 text-sm text-listen-inkSoft">
                     <p className="mb-3">Login required to generate participant links.</p>
                     <button
                       type="button"
                       onClick={() => router.push('/login')}
-                      className="px-4 py-2 bg-stone-600 hover:bg-stone-500 text-white rounded-lg transition-colors flex items-center gap-2"
+                      className="px-4 py-2 bg-listen-accent hover:bg-listen-accentDeep text-listen-ink rounded-lg transition-colors flex items-center gap-2"
                     >
                       <LogIn size={16} />
                       Login as Researcher
@@ -1074,7 +1074,7 @@ const StudySetup: React.FC = () => {
                     type="button"
                     onClick={handleGenerateLink}
                     disabled={isGeneratingLink}
-                    className="w-full py-3 bg-stone-700 hover:bg-stone-600 text-stone-300 font-medium rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-3 bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft font-medium rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <LinkIcon size={18} />
                     {isGeneratingLink ? 'Generating...' : 'Generate Participant Link'}
@@ -1088,11 +1088,11 @@ const StudySetup: React.FC = () => {
           )}
 
           {/* Submit */}
-          <div className="pt-4 border-t border-stone-700">
+          <div className="pt-4 border-t border-listen-line">
             <button
               onClick={handleSubmit}
               disabled={!isValid}
-              className="w-full py-4 bg-stone-600 hover:bg-stone-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+              className="w-full py-4 bg-listen-accent hover:bg-listen-accentDeep disabled:opacity-50 disabled:cursor-not-allowed text-listen-ink font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
             >
               Start Interview <ArrowRight size={18} />
             </button>

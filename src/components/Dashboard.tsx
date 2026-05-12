@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { StoredInterview, StoredStudy } from '@/types';
 import { getAllInterviews, exportAllInterviews, getStudyInterviews, getAllStudies } from '@/services/storageService';
+import { useLocale } from './LocaleProvider';
+import BrandHeader from './BrandHeader';
 import {
   Loader2,
   FileText,
@@ -12,29 +14,26 @@ import {
   Eye,
   Clock,
   MessageSquare,
-  Lightbulb,
+  Quote,
   ArrowLeft,
-  FolderOpen,
   LogOut,
   Filter,
-  BookOpen
+  BookOpen,
 } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   const router = useRouter();
+  const { tr, locale } = useLocale();
   const [interviews, setInterviews] = useState<StoredInterview[]>([]);
   const [studies, setStudies] = useState<StoredStudy[]>([]);
   const [selectedStudyId, setSelectedStudyId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
-  const [warning, setWarning] = useState<string | null>(null);
 
-  // Load studies on mount
   useEffect(() => {
     loadStudies();
   }, []);
 
-  // Load interviews when study filter changes
   useEffect(() => {
     loadInterviews(selectedStudyId);
   }, [selectedStudyId]);
@@ -51,9 +50,7 @@ const Dashboard: React.FC = () => {
   const loadInterviews = async (studyId: string | null) => {
     setLoading(true);
     try {
-      const data = studyId
-        ? await getStudyInterviews(studyId)
-        : await getAllInterviews();
+      const data = studyId ? await getStudyInterviews(studyId) : await getAllInterviews();
       setInterviews(data);
     } catch (error) {
       console.error('Error loading interviews:', error);
@@ -70,7 +67,7 @@ const Dashboard: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `interviews-export-${Date.now()}.zip`;
+        a.download = `listen-interviews-${Date.now()}.zip`;
         a.click();
         URL.revokeObjectURL(url);
       }
@@ -96,118 +93,107 @@ const Dashboard: React.FC = () => {
 
   const formatDuration = (start: number, end: number) => {
     const minutes = Math.round((end - start) / 1000 / 60);
-    return `${minutes} min`;
+    return `${minutes} ${tr('durationUnit')}`;
   };
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
+  const formatDate = (timestamp: number) =>
+    new Date(timestamp).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
-  };
 
   return (
-    <div className="min-h-screen bg-stone-900 p-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-listen-paper">
+      <BrandHeader
+        actions={
+          <button
+            onClick={handleLogout}
+            className="text-[13px] text-listen-inkMute hover:text-listen-ink flex items-center gap-1.5 transition-colors"
+          >
+            <LogOut size={14} />
+            {tr('navLogout')}
+          </button>
+        }
+      />
+
+      <main className="max-w-6xl mx-auto px-6 sm:px-10 py-12">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-10"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-stone-700 flex items-center justify-center">
-                <FolderOpen className="text-stone-300" size={20} />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-white">Interview Dashboard</h1>
-                <p className="text-stone-400">
-                  {interviews.length} interview{interviews.length !== 1 ? 's' : ''} collected
-                </p>
-              </div>
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+            <div>
+              <div className="eyebrow mb-3">{tr('navInterviews')}</div>
+              <h1 className="font-serif text-[42px] sm:text-[52px] leading-[1.05] tracking-tight text-listen-ink">
+                {tr('dashboardTitle')}
+              </h1>
+              <p className="mt-3 text-[15px] text-listen-inkMute">
+                <span className="serif-numeral">{interviews.length}</span>{' '}
+                {interviews.length === 1 ? tr('studiesInterviewLabel') : tr('studiesInterviewsLabel')} ·{' '}
+                {tr('dashboardCollected')}
+              </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => router.push('/studies')}
-                className="px-4 py-2 text-sm bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-xl transition-colors flex items-center gap-2"
+                className="btn-secondary inline-flex items-center gap-2"
               >
                 <BookOpen size={16} />
-                My Studies
+                {tr('navStudies')}
               </button>
               <button
                 onClick={() => router.push('/setup')}
-                className="px-4 py-2 text-sm bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-xl transition-colors flex items-center gap-2"
+                className="btn-secondary inline-flex items-center gap-2"
               >
                 <ArrowLeft size={16} />
-                Back to Setup
+                {tr('backToSetup')}
               </button>
               {interviews.length > 0 && (
                 <button
                   onClick={handleExportAll}
                   disabled={exporting}
-                  className="px-4 py-2 text-sm bg-stone-600 hover:bg-stone-500 text-white rounded-xl transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="btn-primary inline-flex items-center gap-2 disabled:opacity-50"
                 >
-                  {exporting ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <Download size={16} />
-                  )}
-                  Export All
+                  {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+                  {tr('dashboardExportAll')}
                 </button>
               )}
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 text-sm border border-stone-600 text-stone-400 hover:bg-stone-700 rounded-xl transition-colors flex items-center gap-2"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
             </div>
           </div>
         </motion.div>
 
-        {/* Warning */}
-        {warning && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-6 p-4 bg-stone-800 border border-stone-600 rounded-xl text-stone-300 text-sm"
-          >
-            {warning}
-          </motion.div>
-        )}
-
-        {/* Study Filter */}
+        {/* Filter */}
         {studies.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="mb-6 flex items-center gap-3"
+            className="mb-8 flex items-center gap-3"
           >
-            <Filter size={16} className="text-stone-500" />
+            <Filter size={14} className="text-listen-inkMute" />
             <select
               value={selectedStudyId || ''}
               onChange={(e) => setSelectedStudyId(e.target.value || null)}
-              className="px-4 py-2 bg-stone-800 border border-stone-700 rounded-xl text-stone-300 focus:outline-none focus:ring-2 focus:ring-stone-500"
+              className="input-paper max-w-md py-2.5"
             >
-              <option value="">All Studies</option>
+              <option value="">{tr('dashboardFilterAll')}</option>
               {studies.map((study) => (
                 <option key={study.id} value={study.id}>
-                  {study.config.name} ({study.interviewCount} interviews)
+                  {study.config.name} ({study.interviewCount})
                 </option>
               ))}
             </select>
             {selectedStudyId && (
               <button
                 onClick={() => setSelectedStudyId(null)}
-                className="text-sm text-stone-500 hover:text-stone-400"
+                className="text-sm text-listen-inkMute hover:text-listen-ink"
               >
-                Clear filter
+                {tr('dashboardClearFilter')}
               </button>
             )}
           </motion.div>
@@ -215,27 +201,25 @@ const Dashboard: React.FC = () => {
 
         {/* Content */}
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 size={48} className="animate-spin text-stone-400" />
+          <div className="flex items-center justify-center py-24">
+            <Loader2 size={32} className="animate-spin text-listen-inkMute" />
           </div>
         ) : interviews.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-stone-800/50 rounded-2xl border border-stone-700 p-12 text-center"
+            className="paper-card p-12 text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-stone-800 flex items-center justify-center mx-auto mb-4">
-              <FileText size={32} className="text-stone-500" />
+            <div className="w-14 h-14 rounded-full bg-listen-paperDeep border border-listen-line flex items-center justify-center mx-auto mb-5">
+              <FileText size={26} className="text-listen-inkMute" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">No Interviews Yet</h2>
-            <p className="text-stone-400 mb-6">
-              Completed interviews will appear here. Share participant links to start collecting data.
-            </p>
+            <h2 className="font-serif text-2xl text-listen-ink mb-2">{tr('dashboardEmptyTitle')}</h2>
+            <p className="text-listen-inkMute mb-7 max-w-md mx-auto">{tr('dashboardEmptyDesc')}</p>
             <button
               onClick={() => router.push('/setup')}
-              className="px-6 py-3 bg-stone-600 hover:bg-stone-500 text-white rounded-xl transition-colors"
+              className="btn-primary inline-flex items-center gap-2"
             >
-              Create Study Link
+              {tr('dashboardCreateLink')}
             </button>
           </motion.div>
         ) : (
@@ -243,75 +227,76 @@ const Dashboard: React.FC = () => {
             {interviews.map((interview, index) => (
               <motion.div
                 key={interview.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-stone-600 transition-colors cursor-pointer"
+                transition={{ delay: index * 0.03 }}
+                className="paper-card p-6 cursor-pointer"
                 onClick={() => handleViewInterview(interview.id)}
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-semibold text-white">{interview.studyName}</h3>
-                      <span className={`px-2 py-0.5 text-xs rounded-full ${
-                        interview.status === 'completed'
-                          ? 'bg-stone-700 text-stone-300'
-                          : 'bg-stone-600 text-stone-200'
-                      }`}>
-                        {interview.status}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center flex-wrap gap-3 mb-2">
+                      <h3 className="font-serif text-[19px] text-listen-ink">{interview.studyName}</h3>
+                      <span
+                        className={`px-2 py-0.5 text-[11px] tracking-wide rounded-full border ${
+                          interview.status === 'completed'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-200/70'
+                            : 'bg-listen-paperDeep text-listen-inkMute border-listen-line'
+                        }`}
+                      >
+                        {interview.status === 'completed' ? tr('statusCompleted') : tr('statusInProgress')}
                       </span>
                     </div>
 
-                    {/* Participant info */}
                     {interview.participantProfile && interview.participantProfile.fields.length > 0 && (
-                      <div className="text-sm text-stone-400 mb-3">
+                      <div className="text-[13px] text-listen-inkMute mb-3">
                         {interview.participantProfile.fields
-                          .filter(f => f.status === 'extracted' && f.value)
+                          .filter((f) => f.status === 'extracted' && f.value)
                           .slice(0, 3)
-                          .map(f => f.value)
-                          .join(' • ')}
+                          .map((f) => f.value)
+                          .join(' · ')}
                       </div>
                     )}
 
-                    {/* Key insight */}
                     {interview.synthesis?.bottomLine && (
-                      <div className="flex items-start gap-2 text-sm text-stone-300 bg-stone-800 rounded-lg p-3 mb-3">
-                        <Lightbulb size={16} className="text-stone-400 flex-shrink-0 mt-0.5" />
-                        <span className="line-clamp-2">{interview.synthesis.bottomLine}</span>
+                      <div className="flex items-start gap-2.5 text-[14px] text-listen-inkSoft bg-listen-paperDeep/70 rounded-xl p-3.5 mb-3 border border-listen-lineSoft">
+                        <Quote size={15} className="text-listen-accent flex-shrink-0 mt-0.5" />
+                        <span className="line-clamp-2 leading-relaxed">{interview.synthesis.bottomLine}</span>
                       </div>
                     )}
 
-                    {/* Stats */}
-                    <div className="flex items-center gap-4 text-xs text-stone-500">
-                      <div className="flex items-center gap-1">
+                    <div className="flex items-center flex-wrap gap-4 text-[12px] text-listen-inkMute">
+                      <div className="flex items-center gap-1.5">
                         <Clock size={12} />
-                        {formatDuration(interview.createdAt, interview.completedAt)}
+                        <span className="serif-numeral text-listen-inkSoft">
+                          {formatDuration(interview.createdAt, interview.completedAt)}
+                        </span>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1.5">
                         <MessageSquare size={12} />
-                        {interview.transcript.length} messages
+                        <span className="serif-numeral text-listen-inkSoft">{interview.transcript.length}</span>
+                        <span>{tr('messagesLabel')}</span>
                       </div>
-                      <div>
-                        {formatDate(interview.createdAt)}
-                      </div>
+                      <div>{formatDate(interview.createdAt)}</div>
                     </div>
                   </div>
 
                   <button
-                    className="p-2 text-stone-400 hover:text-stone-300 transition-colors"
+                    className="p-2 text-listen-inkMute hover:text-listen-accent transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleViewInterview(interview.id);
                     }}
+                    aria-label="view"
                   >
-                    <Eye size={20} />
+                    <Eye size={18} />
                   </button>
                 </div>
               </motion.div>
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

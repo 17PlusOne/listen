@@ -150,14 +150,14 @@ const Synthesis: React.FC = () => {
 
   if (!studyConfig) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
-        <p className="text-stone-400">No study configured.</p>
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <p className="text-listen-inkMute">No study configured.</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-900 p-8">
+    <div className="min-h-screen bg-listen-paper p-8">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -165,12 +165,12 @@ const Synthesis: React.FC = () => {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-stone-700 flex items-center justify-center">
-              <BarChart3 className="text-stone-300" size={20} />
+            <div className="w-10 h-10 rounded-xl bg-listen-paperDeep flex items-center justify-center">
+              <BarChart3 className="text-listen-inkSoft" size={20} />
             </div>
-            <h1 className="text-3xl font-bold text-white">Interview Analysis</h1>
+            <h1 className="text-3xl font-bold text-listen-ink">Interview Analysis</h1>
           </div>
-          <p className="text-stone-400 ml-13">
+          <p className="text-listen-inkMute ml-13">
             Patterns and insights from the conversation
           </p>
         </motion.div>
@@ -179,13 +179,13 @@ const Synthesis: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-stone-800/50 rounded-xl border border-stone-700 p-12 text-center"
+            className="bg-white rounded-xl border border-listen-line p-12 text-center"
           >
-            <Loader2 size={48} className="animate-spin text-stone-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-white mb-2">
+            <Loader2 size={48} className="animate-spin text-listen-inkMute mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-listen-ink mb-2">
               Analyzing Interview...
             </h2>
-            <p className="text-stone-400">
+            <p className="text-listen-inkMute">
               Looking for patterns, themes, and insights
             </p>
           </motion.div>
@@ -223,15 +223,15 @@ const Synthesis: React.FC = () => {
               </div>
             )}
             {saveStatus === 'pending' && isSaving && (
-              <div className="bg-stone-800/50 border border-stone-600 text-stone-300 rounded-xl p-4 flex items-center gap-3">
+              <div className="bg-white border border-listen-line text-listen-inkSoft rounded-xl p-4 flex items-center gap-3">
                 <Loader2 size={20} className="animate-spin" />
                 <span>Saving interview...</span>
               </div>
             )}
 
             {/* Bottom Line */}
-            <div className="bg-stone-700 text-white rounded-xl p-6">
-              <div className="flex items-center gap-2 mb-2 text-stone-400">
+            <div className="bg-listen-paperDeep text-listen-ink rounded-xl p-6">
+              <div className="flex items-center gap-2 mb-2 text-listen-inkMute">
                 <Target size={18} />
                 <span className="text-sm font-medium uppercase tracking-wider">
                   Key Insight
@@ -242,22 +242,22 @@ const Synthesis: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Stated vs Revealed */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6">
-                <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                  <TrendingUp size={18} className="text-stone-400" />
+              <div className="bg-white rounded-xl border border-listen-line p-6">
+                <h3 className="font-semibold text-listen-ink mb-4 flex items-center gap-2">
+                  <TrendingUp size={18} className="text-listen-inkMute" />
                   Stated vs Revealed
                 </h3>
 
                 <div className="space-y-4">
                   <div>
-                    <div className="text-xs font-medium text-stone-500 uppercase mb-2">
+                    <div className="text-xs font-medium text-listen-inkMute uppercase mb-2">
                       What they said
                     </div>
                     <div className="space-y-1">
                       {synthesis.statedPreferences.map((item, i) => (
                         <div
                           key={i}
-                          className="text-sm bg-stone-800 text-stone-300 px-3 py-1.5 rounded-lg"
+                          className="text-sm bg-white text-listen-inkSoft px-3 py-1.5 rounded-lg"
                         >
                           {item}
                         </div>
@@ -266,14 +266,14 @@ const Synthesis: React.FC = () => {
                   </div>
 
                   <div>
-                    <div className="text-xs font-medium text-stone-500 uppercase mb-2">
+                    <div className="text-xs font-medium text-listen-inkMute uppercase mb-2">
                       What their behavior revealed
                     </div>
                     <div className="space-y-1">
                       {synthesis.revealedPreferences.map((item, i) => (
                         <div
                           key={i}
-                          className="text-sm bg-stone-700 text-stone-200 px-3 py-1.5 rounded-lg"
+                          className="text-sm bg-listen-paperDeep text-listen-ink px-3 py-1.5 rounded-lg"
                         >
                           {item}
                         </div>
@@ -284,17 +284,17 @@ const Synthesis: React.FC = () => {
               </div>
 
               {/* Themes */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6">
-                <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                  <Lightbulb size={18} className="text-stone-400" />
+              <div className="bg-white rounded-xl border border-listen-line p-6">
+                <h3 className="font-semibold text-listen-ink mb-4 flex items-center gap-2">
+                  <Lightbulb size={18} className="text-listen-inkMute" />
                   Key Themes
                 </h3>
 
                 <div className="space-y-3">
                   {synthesis.themes.map((theme, i) => (
-                    <div key={i} className="border-b border-stone-700 pb-3 last:border-0">
-                      <div className="font-medium text-stone-100">{theme.theme}</div>
-                      <div className="text-sm text-stone-400 mt-1">{theme.evidence}</div>
+                    <div key={i} className="border-b border-listen-line pb-3 last:border-0">
+                      <div className="font-medium text-listen-ink">{theme.theme}</div>
+                      <div className="text-sm text-listen-inkMute mt-1">{theme.evidence}</div>
                     </div>
                   ))}
                 </div>
@@ -303,14 +303,14 @@ const Synthesis: React.FC = () => {
 
             {/* Contradictions */}
             {synthesis.contradictions.length > 0 && (
-              <div className="bg-stone-800 border border-stone-600 rounded-xl p-6">
-                <h3 className="font-semibold text-stone-200 mb-3 flex items-center gap-2">
-                  <AlertTriangle size={18} className="text-stone-400" />
+              <div className="bg-white border border-listen-line rounded-xl p-6">
+                <h3 className="font-semibold text-listen-ink mb-3 flex items-center gap-2">
+                  <AlertTriangle size={18} className="text-listen-inkMute" />
                   Potential Contradictions
                 </h3>
                 <ul className="space-y-2">
                   {synthesis.contradictions.map((c, i) => (
-                    <li key={i} className="text-stone-300 text-sm">
+                    <li key={i} className="text-listen-inkSoft text-sm">
                       {c}
                     </li>
                   ))}
@@ -319,17 +319,17 @@ const Synthesis: React.FC = () => {
             )}
 
             {/* Key Insights */}
-            <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6">
-              <h3 className="font-semibold text-white mb-4">
+            <div className="bg-white rounded-xl border border-listen-line p-6">
+              <h3 className="font-semibold text-listen-ink mb-4">
                 Additional Insights
               </h3>
               <ul className="space-y-2">
                 {synthesis.keyInsights.map((insight, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-2 text-stone-300"
+                    className="flex items-start gap-2 text-listen-inkSoft"
                   >
-                    <span className="text-stone-500 mt-1">-</span>
+                    <span className="text-listen-inkMute mt-1">-</span>
                     {insight}
                   </li>
                 ))}
@@ -340,13 +340,13 @@ const Synthesis: React.FC = () => {
             <div className="flex gap-3 pt-4">
               <button
                 onClick={handleBack}
-                className="px-6 py-3 border border-stone-600 text-stone-400 rounded-xl hover:bg-stone-700 transition-colors flex items-center gap-2"
+                className="px-6 py-3 border border-listen-line text-listen-inkMute rounded-xl hover:bg-listen-paperDeep transition-colors flex items-center gap-2"
               >
                 <ArrowLeft size={18} /> Continue Interview
               </button>
               <button
                 onClick={handleExport}
-                className="flex-1 py-3 bg-stone-600 hover:bg-stone-500 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-listen-accent hover:bg-listen-accentDeep text-listen-ink font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
               >
                 Export Data <ArrowRight size={18} />
               </button>
@@ -356,27 +356,27 @@ const Synthesis: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-stone-800/50 rounded-xl border border-stone-700 p-12 text-center"
+            className="bg-white rounded-xl border border-listen-line p-12 text-center"
           >
             <div className="w-16 h-16 rounded-full bg-red-900/30 flex items-center justify-center mx-auto mb-4">
               <AlertTriangle size={32} className="text-red-400" />
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">
+            <h2 className="text-xl font-semibold text-listen-ink mb-2">
               Analysis Failed
             </h2>
-            <p className="text-stone-400 mb-6">
+            <p className="text-listen-inkMute mb-6">
               There was an error analyzing the interview. Please try again.
             </p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={handleBack}
-                className="px-6 py-3 border border-stone-600 text-stone-400 rounded-xl hover:bg-stone-700 transition-colors"
+                className="px-6 py-3 border border-listen-line text-listen-inkMute rounded-xl hover:bg-listen-paperDeep transition-colors"
               >
                 Back to Interview
               </button>
               <button
                 onClick={handleRetryAnalysis}
-                className="px-6 py-3 bg-stone-600 hover:bg-stone-500 text-white font-medium rounded-xl transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-listen-accent hover:bg-listen-accentDeep text-listen-ink font-medium rounded-xl transition-colors flex items-center gap-2"
               >
                 <RefreshCw size={18} />
                 Retry Analysis
@@ -384,13 +384,13 @@ const Synthesis: React.FC = () => {
             </div>
           </motion.div>
         ) : (
-          <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-12 text-center">
-            <p className="text-stone-400">
+          <div className="bg-white rounded-xl border border-listen-line p-12 text-center">
+            <p className="text-listen-inkMute">
               No interview data to analyze yet.
             </p>
             <button
               onClick={handleBack}
-              className="mt-4 px-6 py-2 bg-stone-600 text-white rounded-lg"
+              className="mt-4 px-6 py-2 bg-listen-accent text-listen-ink rounded-lg"
             >
               Go to Interview
             </button>

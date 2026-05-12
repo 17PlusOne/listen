@@ -221,22 +221,22 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
-        <Loader2 size={48} className="animate-spin text-stone-400" />
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <Loader2 size={48} className="animate-spin text-listen-inkMute" />
       </div>
     );
   }
 
   if (!study) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle size={48} className="text-stone-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-white mb-2">Study Not Found</h2>
-          <p className="text-stone-400 mb-4">The study you're looking for doesn't exist.</p>
+          <AlertCircle size={48} className="text-listen-inkMute mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-listen-ink mb-2">Study Not Found</h2>
+          <p className="text-listen-inkMute mb-4">The study you're looking for doesn't exist.</p>
           <button
             onClick={() => router.push('/studies')}
-            className="px-4 py-2 bg-stone-700 hover:bg-stone-600 text-white rounded-xl"
+            className="px-4 py-2 bg-listen-paperDeep hover:bg-listen-accent text-listen-ink rounded-xl"
           >
             Back to Studies
           </button>
@@ -252,7 +252,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-stone-900 p-8">
+    <div className="min-h-screen bg-listen-paper p-8">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
@@ -262,7 +262,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
         >
           <button
             onClick={() => router.push('/studies')}
-            className="text-stone-400 hover:text-stone-300 flex items-center gap-2 mb-4"
+            className="text-listen-inkMute hover:text-listen-inkSoft flex items-center gap-2 mb-4"
           >
             <ArrowLeft size={16} />
             Back to Studies
@@ -270,12 +270,12 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
 
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-stone-700 flex items-center justify-center">
-                <BookOpen className="text-stone-300" size={24} />
+              <div className="w-12 h-12 rounded-xl bg-listen-paperDeep flex items-center justify-center">
+                <BookOpen className="text-listen-inkSoft" size={24} />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">{study.config.name}</h1>
-                <div className="flex items-center gap-3 mt-1 text-sm text-stone-400">
+                <h1 className="text-3xl font-bold text-listen-ink">{study.config.name}</h1>
+                <div className="flex items-center gap-3 mt-1 text-sm text-listen-inkMute">
                   <span className="flex items-center gap-1">
                     <Users size={14} />
                     {study.interviewCount} interviews
@@ -286,7 +286,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                   </span>
                   <span className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${
                     study.isLocked
-                      ? 'bg-stone-700 text-stone-400'
+                      ? 'bg-listen-paperDeep text-listen-inkMute'
                       : 'bg-green-900/50 text-green-400'
                   }`}>
                     {study.isLocked ? <Lock size={10} /> : <Unlock size={10} />}
@@ -299,15 +299,15 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
         </motion.div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-stone-700">
+        <div className="flex gap-2 mb-6 border-b border-listen-line">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-3 flex items-center gap-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'border-stone-400 text-white'
-                  : 'border-transparent text-stone-500 hover:text-stone-400'
+                  ? 'border-listen-accent text-listen-ink'
+                  : 'border-transparent text-listen-inkMute hover:text-listen-inkMute'
               }`}
             >
               {tab.icon}
@@ -326,41 +326,41 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
           {activeTab === 'overview' && (
             <div className="space-y-6">
               {/* Research Question */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6">
-                <h3 className="font-semibold text-white mb-2 flex items-center gap-2">
-                  <Sparkles size={16} className="text-stone-400" />
+              <div className="bg-white rounded-xl border border-listen-line p-6">
+                <h3 className="font-semibold text-listen-ink mb-2 flex items-center gap-2">
+                  <Sparkles size={16} className="text-listen-inkMute" />
                   Research Question
                 </h3>
-                <p className="text-stone-300">{study.config.researchQuestion}</p>
+                <p className="text-listen-inkSoft">{study.config.researchQuestion}</p>
               </div>
 
               {/* Stats Summary */}
               <div className="grid grid-cols-3 gap-4">
-                <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-4 text-center">
-                  <div className="text-3xl font-bold text-white">{study.interviewCount}</div>
-                  <div className="text-sm text-stone-400">Interviews</div>
+                <div className="bg-white rounded-xl border border-listen-line p-4 text-center">
+                  <div className="text-3xl font-bold text-listen-ink">{study.interviewCount}</div>
+                  <div className="text-sm text-listen-inkMute">Interviews</div>
                 </div>
-                <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-4 text-center">
-                  <div className="text-3xl font-bold text-white">{study.config.coreQuestions.length}</div>
-                  <div className="text-sm text-stone-400">Core Questions</div>
+                <div className="bg-white rounded-xl border border-listen-line p-4 text-center">
+                  <div className="text-3xl font-bold text-listen-ink">{study.config.coreQuestions.length}</div>
+                  <div className="text-sm text-listen-inkMute">Core Questions</div>
                 </div>
-                <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-4 text-center">
-                  <div className="text-3xl font-bold text-white">{study.config.topicAreas.length}</div>
-                  <div className="text-sm text-stone-400">Topic Areas</div>
+                <div className="bg-white rounded-xl border border-listen-line p-4 text-center">
+                  <div className="text-3xl font-bold text-listen-ink">{study.config.topicAreas.length}</div>
+                  <div className="text-sm text-listen-inkMute">Topic Areas</div>
                 </div>
               </div>
 
               {/* Aggregate Synthesis */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6">
+              <div className="bg-white rounded-xl border border-listen-line p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-white flex items-center gap-2">
-                    <BarChart3 size={16} className="text-stone-400" />
+                  <h3 className="font-semibold text-listen-ink flex items-center gap-2">
+                    <BarChart3 size={16} className="text-listen-inkMute" />
                     Aggregate Analysis
                   </h3>
                   <button
                     onClick={handleGenerateAggregateSynthesis}
                     disabled={isGeneratingAggregate || interviews.length < 2}
-                    className="px-4 py-2 text-sm bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 text-sm bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isGeneratingAggregate ? (
                       <Loader2 size={14} className="animate-spin" />
@@ -372,35 +372,35 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                 </div>
 
                 {interviews.length < 2 ? (
-                  <p className="text-stone-500 text-sm">
+                  <p className="text-listen-inkMute text-sm">
                     Need at least 2 interviews to generate aggregate analysis.
                   </p>
                 ) : aggregateSynthesis ? (
                   <div className="space-y-4">
                     <div>
-                      <h4 className="text-sm font-medium text-stone-400 mb-2">Key Findings</h4>
+                      <h4 className="text-sm font-medium text-listen-inkMute mb-2">Key Findings</h4>
                       <ul className="space-y-1">
                         {aggregateSynthesis.keyFindings.map((finding, i) => (
-                          <li key={i} className="text-stone-300 text-sm flex items-start gap-2">
-                            <span className="text-stone-500">•</span>
+                          <li key={i} className="text-listen-inkSoft text-sm flex items-start gap-2">
+                            <span className="text-listen-inkMute">•</span>
                             {finding}
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-sm font-medium text-stone-400 mb-2">Bottom Line</h4>
-                      <p className="text-stone-300 text-sm bg-stone-800 rounded-lg p-3">
+                      <h4 className="text-sm font-medium text-listen-inkMute mb-2">Bottom Line</h4>
+                      <p className="text-listen-inkSoft text-sm bg-white rounded-lg p-3">
                         {aggregateSynthesis.bottomLine}
                       </p>
                     </div>
 
                     {/* Generate Follow-up Study Button */}
-                    <div className="pt-4 border-t border-stone-700">
+                    <div className="pt-4 border-t border-listen-line">
                       <button
                         onClick={handleGenerateFollowup}
                         disabled={isGeneratingFollowup}
-                        className="px-4 py-2 text-sm bg-stone-600 hover:bg-stone-500 text-white rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 text-sm bg-listen-accent hover:bg-listen-accentDeep text-listen-ink rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {isGeneratingFollowup ? (
                           <Loader2 size={14} className="animate-spin" />
@@ -409,13 +409,13 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                         )}
                         {isGeneratingFollowup ? 'Generating...' : 'Create Follow-up Study'}
                       </button>
-                      <p className="text-xs text-stone-500 mt-2">
+                      <p className="text-xs text-listen-inkMute mt-2">
                         Generate a new study based on gaps and patterns found in this analysis.
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-stone-500 text-sm">
+                  <p className="text-listen-inkMute text-sm">
                     Click "Analyze All Interviews" to generate cross-interview insights.
                   </p>
                 )}
@@ -426,10 +426,10 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
           {activeTab === 'interviews' && (
             <div className="space-y-4">
               {interviews.length === 0 ? (
-                <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-12 text-center">
-                  <Users size={32} className="text-stone-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-white mb-2">No Interviews Yet</h3>
-                  <p className="text-stone-400 text-sm">
+                <div className="bg-white rounded-xl border border-listen-line p-12 text-center">
+                  <Users size={32} className="text-listen-inkMute mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-listen-ink mb-2">No Interviews Yet</h3>
+                  <p className="text-listen-inkMute text-sm">
                     Share the participant link to start collecting interviews.
                   </p>
                 </div>
@@ -440,14 +440,14 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 hover:border-stone-600 transition-colors cursor-pointer"
+                    className="bg-white rounded-xl border border-listen-line p-6 hover:border-listen-line transition-colors cursor-pointer"
                     onClick={() => router.push(`/dashboard/interview/${interview.id}`)}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         {/* Participant info */}
                         {interview.participantProfile && interview.participantProfile.fields.length > 0 && (
-                          <div className="text-sm text-stone-300 mb-3">
+                          <div className="text-sm text-listen-inkSoft mb-3">
                             {interview.participantProfile.fields
                               .filter(f => f.status === 'extracted' && f.value)
                               .slice(0, 3)
@@ -458,14 +458,14 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
 
                         {/* Key insight */}
                         {interview.synthesis?.bottomLine && (
-                          <div className="flex items-start gap-2 text-sm text-stone-300 bg-stone-800 rounded-lg p-3 mb-3">
-                            <Lightbulb size={16} className="text-stone-400 flex-shrink-0 mt-0.5" />
+                          <div className="flex items-start gap-2 text-sm text-listen-inkSoft bg-white rounded-lg p-3 mb-3">
+                            <Lightbulb size={16} className="text-listen-inkMute flex-shrink-0 mt-0.5" />
                             <span className="line-clamp-2">{interview.synthesis.bottomLine}</span>
                           </div>
                         )}
 
                         {/* Stats */}
-                        <div className="flex items-center gap-4 text-xs text-stone-500">
+                        <div className="flex items-center gap-4 text-xs text-listen-inkMute">
                           <div className="flex items-center gap-1">
                             <Clock size={12} />
                             {formatDuration(interview.createdAt, interview.completedAt)}
@@ -481,7 +481,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                       </div>
 
                       <button
-                        className="p-2 text-stone-400 hover:text-stone-300 transition-colors"
+                        className="p-2 text-listen-inkMute hover:text-listen-inkSoft transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(`/dashboard/interview/${interview.id}`);
@@ -502,10 +502,10 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                 <div className="bg-amber-900/30 border border-amber-700/50 rounded-xl p-4 flex items-start gap-3">
                   <AlertCircle size={20} className="text-amber-400 flex-shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-white">
+                    <h4 className="font-medium text-listen-ink">
                       {study.interviewCount} interview{study.interviewCount > 1 ? 's' : ''} collected
                     </h4>
-                    <p className="text-sm text-stone-400">
+                    <p className="text-sm text-listen-inkMute">
                       This study has collected data. Editing is allowed but may affect consistency with existing responses.
                     </p>
                   </div>
@@ -513,29 +513,29 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
               )}
 
               {/* Study Config Display */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 space-y-4">
+              <div className="bg-white rounded-xl border border-listen-line p-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-stone-400 mb-1">Study Name</label>
-                  <p className="text-stone-200">{study.config.name}</p>
+                  <label className="block text-sm font-medium text-listen-inkMute mb-1">Study Name</label>
+                  <p className="text-listen-ink">{study.config.name}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-400 mb-1">Description</label>
-                  <p className="text-stone-200">{study.config.description || 'No description'}</p>
+                  <label className="block text-sm font-medium text-listen-inkMute mb-1">Description</label>
+                  <p className="text-listen-ink">{study.config.description || 'No description'}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-400 mb-1">Research Question</label>
-                  <p className="text-stone-200">{study.config.researchQuestion}</p>
+                  <label className="block text-sm font-medium text-listen-inkMute mb-1">Research Question</label>
+                  <p className="text-listen-ink">{study.config.researchQuestion}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-400 mb-1">
+                  <label className="block text-sm font-medium text-listen-inkMute mb-1">
                     Core Questions ({study.config.coreQuestions.length})
                   </label>
                   <ul className="space-y-2">
                     {study.config.coreQuestions.map((q, i) => (
-                      <li key={i} className="text-stone-300 text-sm pl-4 border-l-2 border-stone-700">
+                      <li key={i} className="text-listen-inkSoft text-sm pl-4 border-l-2 border-listen-line">
                         {q}
                       </li>
                     ))}
@@ -543,12 +543,12 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-400 mb-1">
+                  <label className="block text-sm font-medium text-listen-inkMute mb-1">
                     Topic Areas ({study.config.topicAreas.length})
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {study.config.topicAreas.map((topic, i) => (
-                      <span key={i} className="px-3 py-1 bg-stone-700 text-stone-300 text-sm rounded-full">
+                      <span key={i} className="px-3 py-1 bg-listen-paperDeep text-listen-inkSoft text-sm rounded-full">
                         {topic}
                       </span>
                     ))}
@@ -556,22 +556,22 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-stone-400 mb-1">AI Interview Style</label>
-                  <p className="text-stone-200 capitalize">{study.config.aiBehavior}</p>
+                  <label className="block text-sm font-medium text-listen-inkMute mb-1">AI Interview Style</label>
+                  <p className="text-listen-ink capitalize">{study.config.aiBehavior}</p>
                 </div>
               </div>
 
               {/* Link Management */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 space-y-4">
-                <h3 className="font-semibold text-stone-100 flex items-center gap-2">
-                  <LinkIcon size={18} className="text-stone-400" />
+              <div className="bg-white rounded-xl border border-listen-line p-6 space-y-4">
+                <h3 className="font-semibold text-listen-ink flex items-center gap-2">
+                  <LinkIcon size={18} className="text-listen-inkMute" />
                   Link Management
                 </h3>
 
-                <div className="flex items-center justify-between p-4 bg-stone-900/50 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-listen-paper/50 rounded-xl">
                   <div>
-                    <div className="font-medium text-stone-200">Participant Access</div>
-                    <p className="text-sm text-stone-400">
+                    <div className="font-medium text-listen-ink">Participant Access</div>
+                    <p className="text-sm text-listen-inkMute">
                       {(study.config.linksEnabled ?? true)
                         ? 'Access enabled - participants can use the link below'
                         : 'Access disabled - the same link will show an error until re-enabled'}
@@ -583,7 +583,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                     className={`w-14 h-7 rounded-full transition-colors flex items-center px-1 ${
                       (study.config.linksEnabled ?? true)
                         ? 'bg-green-600'
-                        : 'bg-stone-600'
+                        : 'bg-listen-accent'
                     } ${isTogglingLinks ? 'opacity-50' : ''}`}
                   >
                     <div className={`w-5 h-5 bg-white rounded-full transition-transform ${
@@ -593,7 +593,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                 </div>
 
                 {study.config.linkExpiration && study.config.linkExpiration !== 'never' && (
-                  <div className="flex items-center gap-2 text-sm text-stone-400">
+                  <div className="flex items-center gap-2 text-sm text-listen-inkMute">
                     <Clock size={14} />
                     <span>Links expire: {study.config.linkExpiration === '7days' ? '7 days' : study.config.linkExpiration === '30days' ? '30 days' : '90 days'} after generation</span>
                   </div>
@@ -607,8 +607,8 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
               </div>
 
               {/* Participant Link Generator */}
-              <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6">
-                <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
+              <div className="bg-white rounded-xl border border-listen-line p-6">
+                <h3 className="text-lg font-medium text-listen-ink mb-4 flex items-center gap-2">
                   <LinkIcon size={18} />
                   Participant Link
                 </h3>
@@ -618,7 +618,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                   <button
                     onClick={handleGenerateLink}
                     disabled={generatingLink || !(study.config.linksEnabled ?? true)}
-                    className="px-4 py-2 bg-stone-600 hover:bg-stone-500 text-white rounded-lg disabled:opacity-50 flex items-center gap-2"
+                    className="px-4 py-2 bg-listen-accent hover:bg-listen-accentDeep text-listen-ink rounded-lg disabled:opacity-50 flex items-center gap-2"
                   >
                     {generatingLink ? <Loader2 size={16} className="animate-spin" /> : <LinkIcon size={16} />}
                     Generate New Link
@@ -631,11 +631,11 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                         type="text"
                         value={participantLink}
                         readOnly
-                        className="flex-1 bg-stone-900 border border-stone-600 rounded-lg px-3 py-2 text-stone-300 text-sm font-mono"
+                        className="flex-1 bg-listen-paper border border-listen-line rounded-lg px-3 py-2 text-listen-inkSoft text-sm font-mono"
                       />
                       <button
                         onClick={handleCopyLink}
-                        className="px-3 py-2 bg-stone-700 hover:bg-stone-600 text-stone-300 rounded-lg flex items-center gap-1"
+                        className="px-3 py-2 bg-listen-paperDeep hover:bg-listen-accent text-listen-inkSoft rounded-lg flex items-center gap-1"
                       >
                         {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
                         {copied ? 'Copied!' : 'Copy'}
@@ -644,7 +644,7 @@ const StudyDetail: React.FC<StudyDetailProps> = ({ studyId }) => {
                   )}
 
                   {/* Explanation */}
-                  <p className="text-xs text-stone-500">
+                  <p className="text-xs text-listen-inkMute">
                     Each click generates a new unique link. All links share the same enable/disable toggle above.
                     {!(study.config.linksEnabled ?? true) && ' Links are currently disabled - enable access above first.'}
                   </p>
