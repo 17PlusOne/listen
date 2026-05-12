@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useStore } from '@/store';
+import { useLocale } from './LocaleProvider';
+import BrandHeader from './BrandHeader';
 import {
   Download,
   FileJson,
@@ -11,10 +13,13 @@ import {
   CheckCircle,
   Copy,
   User,
-  Check
+  Check,
+  Lightbulb,
+  Target
 } from 'lucide-react';
 
 const Export: React.FC = () => {
+  const { tr } = useLocale();
   const {
     studyConfig,
     participantProfile,
@@ -153,15 +158,22 @@ const Export: React.FC = () => {
     const content = generateJSON();
     const filename = `interview-${studyConfig?.id || 'export'}-${Date.now()}.json`;
     downloadFile(content, filename, 'application/json');
+    setJsonDownloaded(true);
+    setTimeout(() => setJsonDownloaded(false), 3000);
   };
 
   const handleDownloadTranscript = () => {
     const content = generateTranscript();
     const filename = `transcript-${studyConfig?.id || 'export'}-${Date.now()}.md`;
     downloadFile(content, filename, 'text/markdown');
+    setMdDownloaded(true);
+    setTimeout(() => setMdDownloaded(false), 3000);
   };
 
   const [jsonCopied, setJsonCopied] = useState(false);
+  const [jsonDownloaded, setJsonDownloaded] = useState(false);
+  const [mdCopied, setMdCopied] = useState(false);
+  const [mdDownloaded, setMdDownloaded] = useState(false);
 
   const handleCopyJSON = () => {
     navigator.clipboard.writeText(generateJSON());
@@ -169,190 +181,342 @@ const Export: React.FC = () => {
     setTimeout(() => setJsonCopied(false), 2000);
   };
 
+  const handleCopyMarkdown = () => {
+    navigator.clipboard.writeText(generateTranscript());
+    setMdCopied(true);
+    setTimeout(() => setMdCopied(false), 2000);
+  };
+
   const handleNewParticipant = () => {
-    resetParticipant();
+    if (window.confirm(tr('exportConfirmNewParticipant'))) {
+      resetParticipant();
+    }
   };
 
   const handleNewStudy = () => {
-    reset();
+    if (window.confirm(tr('exportConfirmNewStudy'))) {
+      reset();
+    }
   };
 
   // Calculate extracted profile fields
   const extractedFields = participantProfile?.fields.filter(f => f.status === 'extracted') || [];
   const totalFields = participantProfile?.fields.length || 0;
 
+  const jsonFilename = `interview-${studyConfig?.id || 'export'}.json`;
+  const mdFilename = `transcript-${studyConfig?.id || 'export'}.md`;
+
   return (
-    <div className="min-h-screen bg-stone-900 p-8">
-      <div className="max-w-2xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8 text-center"
-        >
-          <div className="w-16 h-16 rounded-full bg-stone-700 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="text-stone-300" size={32} />
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Interview Complete
-          </h1>
-          <p className="text-stone-400">
-            Export your data and start a new session
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-listen-paper">
+      <BrandHeader minimal />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-stone-800/50 rounded-xl border border-stone-700 p-8 space-y-6"
-        >
-          {/* Stats */}
-          <div className="grid grid-cols-4 gap-3 text-center">
-            <div className="bg-stone-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-white">
-                {interviewHistory.length}
-              </div>
-              <div className="text-xs text-stone-500">Messages</div>
-            </div>
-            <div className="bg-stone-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-white">
-                {questionProgress.questionsAsked.length}/{studyConfig?.coreQuestions.length || 0}
-              </div>
-              <div className="text-xs text-stone-500">Questions</div>
-            </div>
-            <div className="bg-stone-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-white">
-                {extractedFields.length}/{totalFields}
-              </div>
-              <div className="text-xs text-stone-500">Profile</div>
-            </div>
-            <div className="bg-stone-800 rounded-xl p-4">
-              <div className="text-2xl font-bold text-white">
-                {synthesis?.themes.length || 0}
-              </div>
-              <div className="text-xs text-stone-500">Themes</div>
-            </div>
-          </div>
+      <main className="min-h-screen bg-listen-paper pb-16">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14 space-y-6">
 
-          {/* Participant Profile Summary */}
+          {/* Page header */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-2"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-listen-accentSoft flex items-center justify-center">
+                <CheckCircle size={20} className="text-listen-mint" />
+              </div>
+              <h1 className="font-serif text-3xl text-listen-ink">
+                {tr('exportTitle')}
+              </h1>
+            </div>
+            <p className="text-listen-inkMute pl-[52px]">
+              {tr('exportSubtitle')}
+            </p>
+          </motion.div>
+
+          {/* Stats bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-5 sm:p-6"
+          >
+            <div className="grid grid-cols-4 gap-3 text-center">
+              <div className="space-y-1">
+                <div className="text-2xl font-semibold font-serif text-listen-ink">
+                  {interviewHistory.length}
+                </div>
+                <div className="text-xs text-listen-inkMute">{tr('exportStatsMessages')}</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl font-semibold font-serif text-listen-ink">
+                  {questionProgress.questionsAsked.length}/{studyConfig?.coreQuestions.length || 0}
+                </div>
+                <div className="text-xs text-listen-inkMute">{tr('exportStatsQuestions')}</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl font-semibold font-serif text-listen-ink">
+                  {extractedFields.length}/{totalFields}
+                </div>
+                <div className="text-xs text-listen-inkMute">{tr('exportStatsProfile')}</div>
+              </div>
+              <div className="space-y-1">
+                <div className="text-2xl font-semibold font-serif text-listen-ink">
+                  {synthesis?.themes.length || 0}
+                </div>
+                <div className="text-xs text-listen-inkMute">{tr('exportStatsThemes')}</div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Export action cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 space-y-5"
+          >
+            <h2 className="font-serif text-xl text-listen-ink">{tr('exportActionsTitle')}</h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* JSON card */}
+              <div className="border border-listen-line/60 rounded-xl p-5 space-y-4 bg-listen-paper/40">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-listen-accentSoft flex items-center justify-center flex-shrink-0">
+                    <FileJson size={20} className="text-listen-accent" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-medium text-listen-ink text-sm leading-snug">
+                      {tr('exportJsonTitle')}
+                    </div>
+                    <div className="text-xs text-listen-inkMute mt-0.5 font-mono truncate">
+                      {jsonFilename}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-listen-inkMute leading-relaxed">
+                  {tr('exportJsonDesc')}
+                </p>
+                <div className="space-y-2">
+                  <button
+                    onClick={handleDownloadJSON}
+                    className="w-full flex items-center justify-center gap-2 bg-listen-accent hover:bg-listen-accentDeep text-white rounded-full px-5 py-2.5 text-sm font-medium shadow-accent transition-colors"
+                  >
+                    {jsonDownloaded ? (
+                      <>
+                        <Check size={15} className="text-listen-mint" />
+                        {tr('exportJsonDownloaded')}
+                      </>
+                    ) : (
+                      <>
+                        <Download size={15} />
+                        {tr('exportJsonDownload')}
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCopyJSON}
+                    className="w-full flex items-center justify-center gap-2 bg-white border border-listen-line text-listen-inkSoft hover:bg-listen-paperDeep rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
+                  >
+                    {jsonCopied ? (
+                      <>
+                        <CheckCircle size={15} className="text-listen-mint" />
+                        {tr('exportJsonCopied')}
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={15} />
+                        {tr('exportJsonCopy')}
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Markdown card */}
+              <div className="border border-listen-line/60 rounded-xl p-5 space-y-4 bg-listen-paper/40">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-listen-accentSoft flex items-center justify-center flex-shrink-0">
+                    <FileText size={20} className="text-listen-accent" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-medium text-listen-ink text-sm leading-snug">
+                      {tr('exportMdTitle')}
+                    </div>
+                    <div className="text-xs text-listen-inkMute mt-0.5 font-mono truncate">
+                      {mdFilename}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-listen-inkMute leading-relaxed">
+                  {tr('exportMdDesc')}
+                </p>
+                <div className="space-y-2">
+                  <button
+                    onClick={handleDownloadTranscript}
+                    className="w-full flex items-center justify-center gap-2 bg-listen-accent hover:bg-listen-accentDeep text-white rounded-full px-5 py-2.5 text-sm font-medium shadow-accent transition-colors"
+                  >
+                    {mdDownloaded ? (
+                      <>
+                        <Check size={15} className="text-listen-mint" />
+                        {tr('exportMdDownloaded')}
+                      </>
+                    ) : (
+                      <>
+                        <Download size={15} />
+                        {tr('exportMdDownload')}
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleCopyMarkdown}
+                    className="w-full flex items-center justify-center gap-2 bg-white border border-listen-line text-listen-inkSoft hover:bg-listen-paperDeep rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
+                  >
+                    {mdCopied ? (
+                      <>
+                        <CheckCircle size={15} className="text-listen-mint" />
+                        {tr('exportMdCopied')}
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={15} />
+                        {tr('exportMdCopy')}
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Participant profile summary */}
           {participantProfile && extractedFields.length > 0 && (
-            <div className="bg-stone-800 rounded-xl p-4 space-y-3">
-              <h3 className="font-semibold text-white flex items-center gap-2">
-                <User size={16} className="text-stone-400" />
-                Participant Profile
-              </h3>
-              <div className="grid grid-cols-2 gap-2 text-sm">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 space-y-4"
+            >
+              <h2 className="font-serif text-xl text-listen-ink flex items-center gap-2">
+                <User size={18} className="text-listen-inkMute" />
+                {tr('exportProfileTitle')}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm">
                 {participantProfile.fields.map(f => {
                   const schema = studyConfig?.profileSchema.find(s => s.id === f.fieldId);
                   return (
-                    <div key={f.fieldId} className="flex justify-between items-center py-1">
-                      <span className="text-stone-400">{schema?.label || f.fieldId}</span>
-                      <span className={`${
-                        f.status === 'extracted' ? 'text-stone-200' :
-                        f.status === 'refused' ? 'text-stone-500 italic' :
-                        'text-stone-500'
+                    <div key={f.fieldId} className="flex justify-between items-baseline py-1.5 border-b border-listen-line/40 last:border-0">
+                      <span className="text-listen-inkMute">{schema?.label || f.fieldId}</span>
+                      <span className={`ml-4 text-right ${
+                        f.status === 'extracted'
+                          ? 'text-listen-ink font-medium'
+                          : 'text-listen-inkMute italic'
                       }`}>
-                        {f.status === 'extracted' ? f.value :
-                         f.status === 'refused' ? 'Declined' :
-                         f.status === 'vague' ? 'Unclear' : '—'}
+                        {f.status === 'extracted'
+                          ? f.value
+                          : f.status === 'refused'
+                          ? tr('exportProfileDeclined')
+                          : f.status === 'vague'
+                          ? tr('exportProfileUnclear')
+                          : '—'}
                       </span>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           )}
 
-          {/* Export Options */}
-          <div className="space-y-3">
-            <h2 className="font-semibold text-white">Export Data</h2>
-
-            <button
-              onClick={handleDownloadJSON}
-              className="w-full flex items-center gap-3 p-4 border border-stone-600 rounded-xl hover:bg-stone-700 transition-colors text-left"
+          {/* Synthesis review */}
+          {synthesis && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 space-y-5"
             >
-              <div className="w-10 h-10 rounded-lg bg-stone-700 flex items-center justify-center">
-                <FileJson size={20} className="text-stone-300" />
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-white">Download JSON</div>
-                <div className="text-sm text-stone-400">
-                  Full structured data with profile + transcript
-                </div>
-              </div>
-              <Download size={18} className="text-stone-500" />
-            </button>
+              <h2 className="font-serif text-xl text-listen-ink">
+                {tr('exportSynthesisTitle')}
+              </h2>
 
-            <button
-              onClick={handleDownloadTranscript}
-              className="w-full flex items-center gap-3 p-4 border border-stone-600 rounded-xl hover:bg-stone-700 transition-colors text-left"
-            >
-              <div className="w-10 h-10 rounded-lg bg-stone-700 flex items-center justify-center">
-                <FileText size={20} className="text-stone-300" />
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-white">Download Transcript</div>
-                <div className="text-sm text-stone-400">
-                  Markdown transcript with profile summary
+              {/* Key insight */}
+              <div className="bg-listen-paperDeep rounded-xl p-4 space-y-1">
+                <div className="flex items-center gap-1.5 text-xs text-listen-inkMute uppercase tracking-wider font-medium">
+                  <Target size={13} />
+                  {tr('exportSynthesisKeyInsight')}
                 </div>
+                <p className="text-listen-ink font-medium leading-relaxed">
+                  {synthesis.bottomLine}
+                </p>
               </div>
-              <Download size={18} className="text-stone-500" />
-            </button>
 
-            <button
-              onClick={handleCopyJSON}
-              className={`w-full flex items-center gap-3 p-4 border rounded-xl transition-colors text-left ${
-                jsonCopied
-                  ? 'border-green-700 bg-green-900/30'
-                  : 'border-stone-600 hover:bg-stone-700'
-              }`}
-            >
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                jsonCopied ? 'bg-green-700' : 'bg-stone-700'
-              }`}>
-                {jsonCopied ? (
-                  <Check size={20} className="text-green-300" />
-                ) : (
-                  <Copy size={20} className="text-stone-300" />
-                )}
-              </div>
-              <div className="flex-1">
-                <div className={`font-medium ${jsonCopied ? 'text-green-300' : 'text-white'}`}>
-                  {jsonCopied ? 'Copied!' : 'Copy to Clipboard'}
+              {/* Themes */}
+              {synthesis.themes.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-1.5 text-xs text-listen-inkMute uppercase tracking-wider font-medium">
+                    <Lightbulb size={13} />
+                    {tr('exportSynthesisThemes')}
+                  </div>
+                  <div className="space-y-2">
+                    {synthesis.themes.map((theme, i) => (
+                      <div key={i} className="border-b border-listen-line/40 pb-2 last:border-0">
+                        <div className="text-sm font-medium text-listen-ink">{theme.theme}</div>
+                        <div className="text-xs text-listen-inkMute mt-0.5">{theme.evidence}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div className="text-sm text-stone-400">
-                  Copy JSON data to clipboard
-                </div>
-              </div>
-              {jsonCopied ? (
-                <Check size={18} className="text-green-400" />
-              ) : (
-                <Copy size={18} className="text-stone-500" />
               )}
-            </button>
-          </div>
 
-          {/* Next Actions */}
-          <div className="pt-4 border-t border-stone-700 space-y-3">
-            <h2 className="font-semibold text-white">What's Next?</h2>
+              {/* Key insights */}
+              {synthesis.keyInsights.length > 0 && (
+                <div className="space-y-2">
+                  <div className="text-xs text-listen-inkMute uppercase tracking-wider font-medium">
+                    {tr('exportSynthesisHighlights')}
+                  </div>
+                  <ul className="space-y-1.5">
+                    {synthesis.keyInsights.map((insight, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-listen-inkSoft">
+                        <span className="text-listen-accent mt-0.5 select-none">·</span>
+                        {insight}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </motion.div>
+          )}
 
-            <button
-              onClick={handleNewParticipant}
-              className="w-full py-3 bg-stone-600 hover:bg-stone-500 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              <RotateCcw size={18} />
-              New Participant (Same Study)
-            </button>
+          {/* Reset zone */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 space-y-4"
+          >
+            <div>
+              <h2 className="font-serif text-xl text-listen-ink">{tr('exportResetTitle')}</h2>
+              <p className="text-sm text-listen-inkMute mt-1">{tr('exportResetDesc')}</p>
+            </div>
 
-            <button
-              onClick={handleNewStudy}
-              className="w-full py-3 border border-stone-600 text-stone-400 rounded-xl hover:bg-stone-700 transition-colors"
-            >
-              Create New Study
-            </button>
-          </div>
-        </motion.div>
-      </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={handleNewParticipant}
+                className="flex items-center justify-center gap-2 border border-listen-accentDeep/40 text-listen-accentDeep hover:bg-listen-accentSoft rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
+              >
+                <RotateCcw size={15} className="text-listen-accentDeep" />
+                {tr('exportNewParticipant')}
+              </button>
+              <button
+                onClick={handleNewStudy}
+                className="flex items-center justify-center gap-2 border border-listen-accentDeep/40 text-listen-accentDeep hover:bg-listen-accentSoft rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
+              >
+                <RotateCcw size={15} className="text-listen-accentDeep" />
+                {tr('exportNewStudy')}
+              </button>
+            </div>
+          </motion.div>
+
+        </div>
+      </main>
     </div>
   );
 };

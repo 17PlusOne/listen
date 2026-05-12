@@ -5,8 +5,10 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import {
   Database, Key, CheckCircle, XCircle, Loader2,
-  AlertCircle, ExternalLink, ArrowLeft, Save, ChevronDown, ChevronUp
+  AlertCircle, ExternalLink, ArrowLeft, Save, ChevronDown, ChevronUp, Shield
 } from 'lucide-react';
+import BrandHeader from './BrandHeader';
+import { useLocale } from './LocaleProvider';
 
 interface ResearcherProfile {
   name: string;
@@ -25,6 +27,7 @@ interface ValidationState {
 
 const Settings: React.FC = () => {
   const router = useRouter();
+  const { tr } = useLocale();
   const [profile, setProfile] = useState<ResearcherProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -140,297 +143,345 @@ const Settings: React.FC = () => {
     }
   };
 
-  const StatusIcon: React.FC<{ configured: boolean }> = ({ configured }) =>
-    configured
-      ? <CheckCircle size={16} className="text-green-400" />
-      : <XCircle size={16} className="text-stone-500" />;
+  // Status badge component
+  const StatusBadge: React.FC<{ configured: boolean }> = ({ configured }) =>
+    configured ? (
+      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-listen-mint/15 text-listen-mint border border-listen-mint/30">
+        <CheckCircle size={11} />
+        {tr('settingsConfigured')}
+      </span>
+    ) : (
+      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-listen-accentSoft text-listen-accentDeep border border-listen-accentDeep/30">
+        <XCircle size={11} />
+        {tr('settingsNotConfigured')}
+      </span>
+    );
 
   const ValidationBadge: React.FC<{ state: ValidationState }> = ({ state }) => {
-    if (state.loading) return <Loader2 size={16} className="animate-spin text-stone-400" />;
-    if (state.valid === true) return <CheckCircle size={16} className="text-green-400" />;
-    if (state.valid === false) return <AlertCircle size={16} className="text-red-400" />;
+    if (state.loading) return <Loader2 size={15} className="animate-spin text-listen-inkMute" />;
+    if (state.valid === true) return <CheckCircle size={15} className="text-listen-mint" />;
+    if (state.valid === false) return <AlertCircle size={15} className="text-listen-accentDeep" />;
     return null;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-900 flex items-center justify-center">
-        <Loader2 size={24} className="animate-spin text-stone-400" />
+      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <Loader2 size={24} className="animate-spin text-listen-inkMute" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-900 p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-2xl mx-auto"
-      >
-        <div className="flex items-center gap-3 mb-8">
-          <button
-            onClick={() => router.push('/studies')}
-            className="p-2 hover:bg-stone-800 rounded-lg transition-colors"
-          >
-            <ArrowLeft size={20} className="text-stone-400" />
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-white">Settings</h1>
+    <>
+      <BrandHeader minimal />
+      <main className="min-h-screen bg-listen-paper pt-6 pb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
+          className="max-w-2xl mx-auto px-4 sm:px-6"
+        >
+          {/* Page header */}
+          <div className="flex items-start gap-3 mb-8">
+            <button
+              onClick={() => router.push('/studies')}
+              aria-label={tr('settingsBackToStudies')}
+              className="mt-1 p-1.5 rounded-lg text-listen-inkMute hover:text-listen-ink hover:bg-listen-paperDeep transition-colors"
+            >
+              <ArrowLeft size={20} />
+            </button>
+            <div>
+              <h1 className="font-serif text-3xl text-listen-ink mb-1">{tr('settingsTitle')}</h1>
+              <p className="text-listen-inkMute text-sm">
+                {profile ? profile.email : tr('settingsSubtitle')}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+
+            {/* Current Status */}
             {profile && (
-              <p className="text-stone-400 text-sm">{profile.email}</p>
-            )}
-          </div>
-        </div>
-
-        {/* Current Status */}
-        {profile && (
-          <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 mb-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Current Status</h2>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="flex items-center gap-2">
-                <StatusIcon configured={profile.hasGeminiKey} />
-                <span className="text-stone-300 text-sm">Gemini Key</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <StatusIcon configured={profile.hasAnthropicKey} />
-                <span className="text-stone-300 text-sm">Claude Key</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <StatusIcon configured={profile.hasRedisConfigured} />
-                <span className="text-stone-300 text-sm">Redis Storage</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* AI API Keys */}
-        <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Key size={18} className="text-stone-400" />
-            <h2 className="text-lg font-semibold text-white">AI API Keys</h2>
-          </div>
-          <p className="text-stone-400 text-sm mb-4">
-            Update your API keys. Leave blank to keep the current key.
-          </p>
-
-          <div className="space-y-4">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-sm font-medium text-stone-300">Gemini API Key</label>
-                <ValidationBadge state={geminiValidation} />
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  value={geminiKey}
-                  onChange={(e) => { setGeminiKey(e.target.value); setGeminiValidation({ loading: false, valid: null, error: null }); }}
-                  placeholder={profile?.hasGeminiKey ? '(currently set)' : 'AIza...'}
-                  className="flex-1 px-3 py-2 rounded-lg bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 text-sm focus:outline-none focus:ring-2 focus:ring-stone-500"
-                />
-                <button
-                  onClick={() => validateAiKey('gemini', geminiKey)}
-                  disabled={!geminiKey || geminiValidation.loading}
-                  className="px-3 py-2 bg-stone-700 hover:bg-stone-600 disabled:opacity-50 text-stone-300 text-sm rounded-lg transition-colors"
-                >
-                  Test
-                </button>
-              </div>
-              {geminiValidation.error && <p className="text-red-400 text-xs mt-1">{geminiValidation.error}</p>}
-
-              {/* Expandable setup guide */}
-              <div className="mt-2">
-                <button
-                  onClick={() => setGeminiGuideOpen(!geminiGuideOpen)}
-                  className="text-xs text-stone-500 hover:text-stone-400 inline-flex items-center gap-1"
-                >
-                  {geminiGuideOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                  Setup guide
-                </button>
-
-                {geminiGuideOpen && (
-                  <div className="mt-2 p-3 bg-stone-800/30 border border-stone-600 rounded-lg text-xs space-y-2">
-                    <ol className="list-decimal list-inside space-y-1 text-stone-300">
-                      <li>Go to <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-stone-300 underline">aistudio.google.com/apikey</a></li>
-                      <li>Sign in and click "Create API key"</li>
-                      <li>Copy the key (starts with AIza)</li>
-                    </ol>
-                    <div className="flex items-start gap-1.5 text-stone-400 mt-2">
-                      <span>•</span>
-                      <span>Free: 10 req/min, 250 req/day</span>
-                    </div>
+              <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+                <h2 className="font-serif text-lg text-listen-ink mb-4">{tr('settingsCurrentStatus')}</h2>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-listen-inkMute text-xs">Gemini</span>
+                    <StatusBadge configured={profile.hasGeminiKey} />
                   </div>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-sm font-medium text-stone-300">Claude API Key</label>
-                <ValidationBadge state={anthropicValidation} />
-              </div>
-              <div className="flex gap-2">
-                <input
-                  type="password"
-                  value={anthropicKey}
-                  onChange={(e) => { setAnthropicKey(e.target.value); setAnthropicValidation({ loading: false, valid: null, error: null }); }}
-                  placeholder={profile?.hasAnthropicKey ? '(currently set)' : 'sk-ant-...'}
-                  className="flex-1 px-3 py-2 rounded-lg bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 text-sm focus:outline-none focus:ring-2 focus:ring-stone-500"
-                />
-                <button
-                  onClick={() => validateAiKey('claude', anthropicKey)}
-                  disabled={!anthropicKey || anthropicValidation.loading}
-                  className="px-3 py-2 bg-stone-700 hover:bg-stone-600 disabled:opacity-50 text-stone-300 text-sm rounded-lg transition-colors"
-                >
-                  Test
-                </button>
-              </div>
-              {anthropicValidation.error && <p className="text-red-400 text-xs mt-1">{anthropicValidation.error}</p>}
-
-              {/* Expandable setup guide */}
-              <div className="mt-2">
-                <button
-                  onClick={() => setClaudeGuideOpen(!claudeGuideOpen)}
-                  className="text-xs text-stone-500 hover:text-stone-400 inline-flex items-center gap-1"
-                >
-                  {claudeGuideOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                  Setup guide
-                </button>
-
-                {claudeGuideOpen && (
-                  <div className="mt-2 p-3 bg-stone-800/30 border border-stone-600 rounded-lg text-xs space-y-2">
-                    <ol className="list-decimal list-inside space-y-1 text-stone-300">
-                      <li>Go to <a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-stone-300 underline">console.anthropic.com</a></li>
-                      <li>Sign up and claim $5 free credits (US phone verification required)</li>
-                      <li>Go to API Keys → Create API Key → copy it (starts with sk-ant-)</li>
-                    </ol>
-                    <div className="flex items-start gap-1.5 text-stone-400 mt-2">
-                      <span>•</span>
-                      <span>$5 free ≈ 15-100 interviews</span>
-                    </div>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-listen-inkMute text-xs">Claude</span>
+                    <StatusBadge configured={profile.hasAnthropicKey} />
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Redis Storage */}
-        <div className="bg-stone-800/50 rounded-xl border border-stone-700 p-6 mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Database size={18} className="text-stone-400" />
-            <h2 className="text-lg font-semibold text-white">Upstash Redis Storage</h2>
-          </div>
-          <p className="text-stone-400 text-sm mb-4">
-            Update your Redis credentials. Leave blank to keep the current connection.
-            <span className="text-amber-400"> Warning: changing your Redis URL will disconnect from your current data.</span>
-          </p>
-
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-stone-300 mb-1 block">REST API URL</label>
-              <input
-                type="text"
-                value={redisUrl}
-                onChange={(e) => { setRedisUrl(e.target.value); setRedisValidation({ loading: false, valid: null, error: null }); }}
-                placeholder={profile?.hasRedisConfigured ? '(currently set)' : 'https://your-db.upstash.io'}
-                className="w-full px-3 py-2 rounded-lg bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 text-sm focus:outline-none focus:ring-2 focus:ring-stone-500"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium text-stone-300 mb-1 block">REST API Token</label>
-              <input
-                type="password"
-                value={redisToken}
-                onChange={(e) => { setRedisToken(e.target.value); setRedisValidation({ loading: false, valid: null, error: null }); }}
-                placeholder={profile?.hasRedisConfigured ? '(currently set)' : 'AXxx...'}
-                className="w-full px-3 py-2 rounded-lg bg-stone-800 border border-stone-600 text-stone-100 placeholder-stone-500 text-sm focus:outline-none focus:ring-2 focus:ring-stone-500"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <ValidationBadge state={redisValidation} />
-                {redisValidation.valid && <span className="text-green-400 text-sm">Connected</span>}
-                {redisValidation.error && <span className="text-red-400 text-sm">{redisValidation.error}</span>}
-              </div>
-              <button
-                onClick={validateRedis}
-                disabled={!redisUrl || !redisToken || redisValidation.loading}
-                className="px-4 py-2 bg-stone-700 hover:bg-stone-600 disabled:opacity-50 text-stone-300 text-sm rounded-lg transition-colors"
-              >
-                {redisValidation.loading ? 'Testing...' : 'Test Connection'}
-              </button>
-            </div>
-
-            {/* Expandable setup guide */}
-            <div>
-              <button
-                onClick={() => setRedisGuideOpen(!redisGuideOpen)}
-                className="text-xs text-stone-500 hover:text-stone-400 inline-flex items-center gap-1"
-              >
-                {redisGuideOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
-                Setup guide
-              </button>
-
-              {redisGuideOpen && (
-                <div className="mt-2 p-3 bg-stone-800/30 border border-stone-600 rounded-lg text-xs space-y-2">
-                  <ol className="list-decimal list-inside space-y-1 text-stone-300">
-                    <li>Go to <a href="https://console.upstash.com" target="_blank" rel="noopener noreferrer" className="text-stone-400 hover:text-stone-300 underline">console.upstash.com</a> and sign in</li>
-                    <li>Click "+ Create Database" → choose Regional and Free plan</li>
-                    <li>After creation, go to database details → REST API section</li>
-                    <li>Copy REST URL (https://*.upstash.io) and REST Token</li>
-                  </ol>
-                  <div className="flex items-start gap-1.5 text-amber-400 mt-2">
-                    <span>⚠</span>
-                    <span>Use REST URL (https://), not regular URL (redis://)</span>
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-listen-inkMute text-xs">Redis</span>
+                    <StatusBadge configured={profile.hasRedisConfigured} />
                   </div>
                 </div>
-              )}
+              </div>
+            )}
+
+            {/* AI API Keys */}
+            <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+              <div className="flex items-center gap-2 mb-2">
+                <Key size={17} className="text-listen-accent" />
+                <h2 className="font-serif text-lg text-listen-ink">{tr('settingsApiKeysSection')}</h2>
+              </div>
+              <p className="text-listen-inkMute text-sm mb-6">{tr('settingsApiKeysDesc')}</p>
+
+              <div className="space-y-6">
+
+                {/* Gemini */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-sm font-medium text-listen-inkSoft">{tr('settingsGeminiKey')}</label>
+                    <ValidationBadge state={geminiValidation} />
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="password"
+                      value={geminiKey}
+                      onChange={(e) => { setGeminiKey(e.target.value); setGeminiValidation({ loading: false, valid: null, error: null }); }}
+                      placeholder={profile?.hasGeminiKey ? tr('settingsGeminiPlaceholder') : 'AIza...'}
+                      className="flex-1 bg-white border border-listen-line focus:border-listen-accent rounded-xl px-3 py-2.5 text-listen-ink placeholder:text-listen-inkGhost text-sm focus:outline-none transition-colors"
+                    />
+                    <button
+                      onClick={() => validateAiKey('gemini', geminiKey)}
+                      disabled={!geminiKey || geminiValidation.loading}
+                      className="bg-white border border-listen-line text-listen-inkSoft hover:bg-listen-paperDeep rounded-full px-4 py-2 text-sm disabled:opacity-40 transition-colors"
+                    >
+                      {geminiValidation.loading ? tr('settingsValidating') : tr('settingsValidate')}
+                    </button>
+                  </div>
+                  {geminiValidation.valid === true && (
+                    <p className="text-listen-mint text-xs mt-1.5 flex items-center gap-1">
+                      <CheckCircle size={12} /> {tr('settingsValidated')}
+                    </p>
+                  )}
+                  {geminiValidation.error && (
+                    <p className="text-listen-accentDeep text-xs mt-1.5">{geminiValidation.error}</p>
+                  )}
+
+                  {/* Gemini setup guide */}
+                  <div className="mt-3">
+                    <button
+                      onClick={() => setGeminiGuideOpen(!geminiGuideOpen)}
+                      className="text-xs text-listen-inkMute hover:text-listen-inkSoft inline-flex items-center gap-1 transition-colors"
+                    >
+                      {geminiGuideOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                      {tr('settingsSetupGuide')}
+                    </button>
+                    {geminiGuideOpen && (
+                      <div className="mt-2 p-4 bg-listen-paperDeep border border-listen-line/60 rounded-xl text-xs space-y-2">
+                        <ol className="list-decimal list-inside space-y-1 text-listen-inkSoft">
+                          <li>
+                            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-listen-accent hover:text-listen-accentDeep underline underline-offset-2 inline-flex items-center gap-0.5">
+                              aistudio.google.com/apikey <ExternalLink size={10} />
+                            </a>
+                            {' — '}{tr('settingsGeminiGuide1')}
+                          </li>
+                          <li>{tr('settingsGeminiGuide2')}</li>
+                          <li>{tr('settingsGeminiGuide3')}</li>
+                        </ol>
+                        <p className="text-listen-inkMute">{tr('settingsGeminiFree')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Claude */}
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-sm font-medium text-listen-inkSoft">{tr('settingsAnthropicKey')}</label>
+                    <ValidationBadge state={anthropicValidation} />
+                  </div>
+                  <div className="flex gap-2">
+                    <input
+                      type="password"
+                      value={anthropicKey}
+                      onChange={(e) => { setAnthropicKey(e.target.value); setAnthropicValidation({ loading: false, valid: null, error: null }); }}
+                      placeholder={profile?.hasAnthropicKey ? tr('settingsAnthropicPlaceholder') : 'sk-ant-...'}
+                      className="flex-1 bg-white border border-listen-line focus:border-listen-accent rounded-xl px-3 py-2.5 text-listen-ink placeholder:text-listen-inkGhost text-sm focus:outline-none transition-colors"
+                    />
+                    <button
+                      onClick={() => validateAiKey('claude', anthropicKey)}
+                      disabled={!anthropicKey || anthropicValidation.loading}
+                      className="bg-white border border-listen-line text-listen-inkSoft hover:bg-listen-paperDeep rounded-full px-4 py-2 text-sm disabled:opacity-40 transition-colors"
+                    >
+                      {anthropicValidation.loading ? tr('settingsValidating') : tr('settingsValidate')}
+                    </button>
+                  </div>
+                  {anthropicValidation.valid === true && (
+                    <p className="text-listen-mint text-xs mt-1.5 flex items-center gap-1">
+                      <CheckCircle size={12} /> {tr('settingsValidated')}
+                    </p>
+                  )}
+                  {anthropicValidation.error && (
+                    <p className="text-listen-accentDeep text-xs mt-1.5">{anthropicValidation.error}</p>
+                  )}
+
+                  {/* Claude setup guide */}
+                  <div className="mt-3">
+                    <button
+                      onClick={() => setClaudeGuideOpen(!claudeGuideOpen)}
+                      className="text-xs text-listen-inkMute hover:text-listen-inkSoft inline-flex items-center gap-1 transition-colors"
+                    >
+                      {claudeGuideOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                      {tr('settingsSetupGuide')}
+                    </button>
+                    {claudeGuideOpen && (
+                      <div className="mt-2 p-4 bg-listen-paperDeep border border-listen-line/60 rounded-xl text-xs space-y-2">
+                        <ol className="list-decimal list-inside space-y-1 text-listen-inkSoft">
+                          <li>
+                            <a href="https://console.anthropic.com" target="_blank" rel="noopener noreferrer" className="text-listen-accent hover:text-listen-accentDeep underline underline-offset-2 inline-flex items-center gap-0.5">
+                              console.anthropic.com <ExternalLink size={10} />
+                            </a>
+                          </li>
+                          <li>{tr('settingsClaudeGuide2')}</li>
+                          <li>{tr('settingsClaudeGuide3')}</li>
+                        </ol>
+                        <p className="text-listen-inkMute">{tr('settingsClaudeFree')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Save Button */}
-        {/* Partial Redis warning */}
-        {((redisUrl && !redisToken) || (!redisUrl && redisToken)) && (
-          <div className="flex items-center gap-2 p-3 mb-6 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-400 text-sm">
-            <AlertCircle size={16} className="flex-shrink-0" />
-            Both Redis URL and token are required to update storage credentials.
-          </div>
-        )}
+            {/* Redis Storage */}
+            <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+              <div className="flex items-center gap-2 mb-2">
+                <Database size={17} className="text-listen-mint" />
+                <h2 className="font-serif text-lg text-listen-ink">{tr('settingsStorageSection')}</h2>
+              </div>
+              <p className="text-listen-inkMute text-sm mb-1">{tr('settingsStorageDesc')}</p>
+              <p className="text-listen-warm text-xs mb-6">{tr('settingsStorageWarning')}</p>
 
-        <div className="flex items-center justify-between">
-          <div>
-            {saveSuccess && (
-              <span className="text-green-400 text-sm flex items-center gap-1">
-                <CheckCircle size={14} /> Saved successfully
-              </span>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium text-listen-inkSoft mb-1.5 block">{tr('settingsStorageUrl')}</label>
+                  <input
+                    type="text"
+                    value={redisUrl}
+                    onChange={(e) => { setRedisUrl(e.target.value); setRedisValidation({ loading: false, valid: null, error: null }); }}
+                    placeholder={profile?.hasRedisConfigured ? tr('settingsStorageUrlPlaceholder') : 'https://your-db.upstash.io'}
+                    className="w-full bg-white border border-listen-line focus:border-listen-accent rounded-xl px-3 py-2.5 text-listen-ink placeholder:text-listen-inkGhost text-sm focus:outline-none transition-colors"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-listen-inkSoft mb-1.5 block">{tr('settingsStorageToken')}</label>
+                  <input
+                    type="password"
+                    value={redisToken}
+                    onChange={(e) => { setRedisToken(e.target.value); setRedisValidation({ loading: false, valid: null, error: null }); }}
+                    placeholder={profile?.hasRedisConfigured ? tr('settingsStorageTokenPlaceholder') : 'AXxx...'}
+                    className="w-full bg-white border border-listen-line focus:border-listen-accent rounded-xl px-3 py-2.5 text-listen-ink placeholder:text-listen-inkGhost text-sm focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <ValidationBadge state={redisValidation} />
+                    {redisValidation.valid && (
+                      <span className="text-listen-mint text-sm">{tr('settingsConnected')}</span>
+                    )}
+                    {redisValidation.error && (
+                      <span className="text-listen-accentDeep text-sm">{redisValidation.error}</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={validateRedis}
+                    disabled={!redisUrl || !redisToken || redisValidation.loading}
+                    className="bg-white border border-listen-line text-listen-inkSoft hover:bg-listen-paperDeep rounded-full px-4 py-2 text-sm disabled:opacity-40 transition-colors"
+                  >
+                    {redisValidation.loading ? tr('settingsTestingConnection') : tr('settingsTestConnection')}
+                  </button>
+                </div>
+
+                {/* Redis setup guide */}
+                <div>
+                  <button
+                    onClick={() => setRedisGuideOpen(!redisGuideOpen)}
+                    className="text-xs text-listen-inkMute hover:text-listen-inkSoft inline-flex items-center gap-1 transition-colors"
+                  >
+                    {redisGuideOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                    {tr('settingsSetupGuide')}
+                  </button>
+                  {redisGuideOpen && (
+                    <div className="mt-2 p-4 bg-listen-paperDeep border border-listen-line/60 rounded-xl text-xs space-y-2">
+                      <ol className="list-decimal list-inside space-y-1 text-listen-inkSoft">
+                        <li>
+                          <a href="https://console.upstash.com" target="_blank" rel="noopener noreferrer" className="text-listen-accent hover:text-listen-accentDeep underline underline-offset-2 inline-flex items-center gap-0.5">
+                            console.upstash.com <ExternalLink size={10} />
+                          </a>
+                          {' — '}{tr('settingsRedisGuide1')}
+                        </li>
+                        <li>{tr('settingsRedisGuide2')}</li>
+                        <li>{tr('settingsRedisGuide3')}</li>
+                        <li>{tr('settingsRedisGuide4')}</li>
+                      </ol>
+                      <p className="text-listen-warm">{tr('settingsRedisNote')}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Security note */}
+            <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield size={17} className="text-listen-inkMute" />
+                <h2 className="font-serif text-lg text-listen-ink">{tr('settingsSecuritySection')}</h2>
+              </div>
+              <p className="text-listen-inkMute text-sm leading-relaxed">{tr('settingsSecurityBody')}</p>
+            </div>
+
+            {/* Partial Redis warning */}
+            {((redisUrl && !redisToken) || (!redisUrl && redisToken)) && (
+              <div className="flex items-center gap-2 p-4 bg-listen-accentSoft border border-listen-accentDeep/30 rounded-xl text-listen-accentDeep text-sm">
+                <AlertCircle size={16} className="flex-shrink-0" />
+                {tr('settingsPartialRedis')}
+              </div>
             )}
-            {saveError && (
-              <span className="text-red-400 text-sm flex items-center gap-1">
-                <AlertCircle size={14} /> {saveError}
-              </span>
-            )}
+
+            {/* Save footer */}
+            <div className="flex items-center justify-between pt-2">
+              <div>
+                {saveSuccess && (
+                  <span className="text-listen-mint text-sm flex items-center gap-1.5">
+                    <CheckCircle size={14} /> {tr('settingsSaveSuccess')}
+                  </span>
+                )}
+                {saveError && (
+                  <span className="text-listen-accentDeep text-sm flex items-center gap-1.5">
+                    <AlertCircle size={14} /> {saveError}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={handleSave}
+                disabled={saving || !hasChanges}
+                className="bg-listen-accent hover:bg-listen-accentDeep text-white rounded-full px-5 py-2.5 shadow-accent text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+              >
+                {saving ? (
+                  <>
+                    <Loader2 size={16} className="animate-spin" />
+                    {tr('settingsSaving')}
+                  </>
+                ) : (
+                  <>
+                    <Save size={16} />
+                    {tr('settingsSaveChanges')}
+                  </>
+                )}
+              </button>
+            </div>
+
           </div>
-          <button
-            onClick={handleSave}
-            disabled={saving || !hasChanges}
-            className="px-6 py-3 bg-stone-600 hover:bg-stone-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center gap-2"
-          >
-            {saving ? (
-              <>
-                <Loader2 size={18} className="animate-spin" />
-                Saving...
-              </>
-            ) : (
-              <>
-                <Save size={18} />
-                Save Changes
-              </>
-            )}
-          </button>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </main>
+    </>
   );
 };
 

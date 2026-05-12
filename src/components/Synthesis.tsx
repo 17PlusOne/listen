@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { useStore } from '@/store';
 import { synthesizeInterview } from '@/services/geminiService';
 import { saveCompletedInterview } from '@/services/storageService';
+import { useLocale } from './LocaleProvider';
+import BrandHeader from './BrandHeader';
 import {
   Loader2,
   ArrowRight,
@@ -22,6 +24,7 @@ import {
 
 const Synthesis: React.FC = () => {
   const router = useRouter();
+  const { tr } = useLocale();
   const {
     studyConfig,
     participantProfile,
@@ -150,28 +153,32 @@ const Synthesis: React.FC = () => {
 
   if (!studyConfig) {
     return (
-      <div className="min-h-screen bg-listen-paper flex items-center justify-center">
-        <p className="text-listen-inkMute">No study configured.</p>
-      </div>
+      <main className="min-h-screen bg-listen-paper flex items-center justify-center">
+        <p className="text-listen-inkMute">{tr('synthesisNoData')}</p>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-listen-paper p-8">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen bg-listen-paper">
+      <BrandHeader minimal />
+
+      <div className="max-w-4xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-listen-paperDeep flex items-center justify-center">
-              <BarChart3 className="text-listen-inkSoft" size={20} />
+            <div className="w-10 h-10 rounded-xl bg-listen-paperDeep border border-listen-line/60 flex items-center justify-center">
+              <BarChart3 className="text-listen-accent" size={20} />
             </div>
-            <h1 className="text-3xl font-bold text-listen-ink">Interview Analysis</h1>
+            <h1 className="font-serif text-2xl sm:text-3xl text-listen-ink">
+              {tr('synthesisPageTitle')}
+            </h1>
           </div>
           <p className="text-listen-inkMute ml-13">
-            Patterns and insights from the conversation
+            {tr('synthesisPageSubtitle')}
           </p>
         </motion.div>
 
@@ -179,14 +186,14 @@ const Synthesis: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white rounded-xl border border-listen-line p-12 text-center"
+            className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 text-center"
           >
-            <Loader2 size={48} className="animate-spin text-listen-inkMute mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-listen-ink mb-2">
-              Analyzing Interview...
+            <Loader2 size={48} className="animate-spin text-listen-accent mx-auto mb-4" />
+            <h2 className="font-serif text-lg text-listen-ink mb-2">
+              {tr('synthesisAnalyzing')}
             </h2>
             <p className="text-listen-inkMute">
-              Looking for patterns, themes, and insights
+              {tr('synthesisAnalyzingDesc')}
             </p>
           </motion.div>
         ) : synthesis ? (
@@ -197,67 +204,69 @@ const Synthesis: React.FC = () => {
           >
             {/* Save Status Banner */}
             {saveStatus === 'saved' && (
-              <div className="bg-green-900/30 border border-green-700 text-green-300 rounded-xl p-4 flex items-center gap-3">
-                <CheckCircle size={20} />
-                <span>Interview saved successfully. View it in the researcher dashboard.</span>
+              <div className="bg-white border border-listen-mint/40 text-listen-mint rounded-2xl shadow-paper p-4 flex items-center gap-3">
+                <CheckCircle size={20} className="text-listen-mint shrink-0" />
+                <span className="text-listen-ink text-sm">{tr('synthesisSaved')}</span>
               </div>
             )}
             {saveStatus === 'failed' && (
-              <div className="bg-yellow-900/30 border border-yellow-700 text-yellow-300 rounded-xl p-4 flex items-center justify-between">
+              <div className="bg-white border border-listen-accentDeep/30 rounded-2xl shadow-paper p-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <XCircle size={20} />
-                  <span>Could not save interview. You can still export locally below.</span>
+                  <XCircle size={20} className="text-listen-accentDeep shrink-0" />
+                  <span className="text-listen-inkSoft text-sm">{tr('synthesisSaveFailed')}</span>
                 </div>
                 <button
                   onClick={handleRetrySave}
                   disabled={isSaving}
-                  className="px-3 py-1.5 bg-yellow-700 hover:bg-yellow-600 text-yellow-100 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
+                  className="shrink-0 px-4 py-1.5 bg-listen-accent hover:bg-listen-accentDeep text-white rounded-full text-sm font-medium transition-colors flex items-center gap-2 disabled:opacity-50"
                 >
                   {isSaving ? (
                     <Loader2 size={14} className="animate-spin" />
                   ) : (
                     <RefreshCw size={14} />
                   )}
-                  Retry Save
+                  {tr('synthesisRetrySave')}
                 </button>
               </div>
             )}
             {saveStatus === 'pending' && isSaving && (
-              <div className="bg-white border border-listen-line text-listen-inkSoft rounded-xl p-4 flex items-center gap-3">
-                <Loader2 size={20} className="animate-spin" />
-                <span>Saving interview...</span>
+              <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-4 flex items-center gap-3">
+                <Loader2 size={20} className="animate-spin text-listen-accent" />
+                <span className="text-listen-inkSoft text-sm">{tr('synthesisSaving')}</span>
               </div>
             )}
 
-            {/* Bottom Line */}
-            <div className="bg-listen-paperDeep text-listen-ink rounded-xl p-6">
-              <div className="flex items-center gap-2 mb-2 text-listen-inkMute">
-                <Target size={18} />
-                <span className="text-sm font-medium uppercase tracking-wider">
-                  Key Insight
+            {/* Key Insight */}
+            <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+              <div className="flex items-center gap-2 mb-3 text-listen-inkMute">
+                <Target size={16} className="text-listen-accent" />
+                <span className="text-xs font-medium uppercase tracking-wider">
+                  {tr('synthesisKeyInsight')}
                 </span>
               </div>
-              <p className="text-xl font-medium">{synthesis.bottomLine}</p>
+              <p className="font-serif text-xl text-listen-ink leading-relaxed">
+                {synthesis.bottomLine}
+              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Stated vs Revealed */}
-              <div className="bg-white rounded-xl border border-listen-line p-6">
-                <h3 className="font-semibold text-listen-ink mb-4 flex items-center gap-2">
-                  <TrendingUp size={18} className="text-listen-inkMute" />
-                  Stated vs Revealed
+              <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+                <h3 className="font-serif text-lg text-listen-ink mb-4 flex items-center gap-2">
+                  <TrendingUp size={18} className="text-listen-accent" />
+                  {tr('synthesisPatternsTitle')}
                 </h3>
 
                 <div className="space-y-4">
                   <div>
-                    <div className="text-xs font-medium text-listen-inkMute uppercase mb-2">
-                      What they said
+                    <div className="text-xs font-medium text-listen-inkMute uppercase tracking-wider mb-2">
+                      {tr('synthesisPatternsStated')}
                     </div>
                     <div className="space-y-1">
                       {synthesis.statedPreferences.map((item, i) => (
                         <div
                           key={i}
-                          className="text-sm bg-white text-listen-inkSoft px-3 py-1.5 rounded-lg"
+                          className="text-sm bg-listen-paper text-listen-inkSoft px-3 py-1.5 rounded-xl border border-listen-line/40"
                         >
                           {item}
                         </div>
@@ -266,14 +275,14 @@ const Synthesis: React.FC = () => {
                   </div>
 
                   <div>
-                    <div className="text-xs font-medium text-listen-inkMute uppercase mb-2">
-                      What their behavior revealed
+                    <div className="text-xs font-medium text-listen-inkMute uppercase tracking-wider mb-2">
+                      {tr('synthesisPatternsRevealed')}
                     </div>
                     <div className="space-y-1">
                       {synthesis.revealedPreferences.map((item, i) => (
                         <div
                           key={i}
-                          className="text-sm bg-listen-paperDeep text-listen-ink px-3 py-1.5 rounded-lg"
+                          className="text-sm bg-listen-paperDeep text-listen-ink px-3 py-1.5 rounded-xl border border-listen-line/40"
                         >
                           {item}
                         </div>
@@ -284,33 +293,34 @@ const Synthesis: React.FC = () => {
               </div>
 
               {/* Themes */}
-              <div className="bg-white rounded-xl border border-listen-line p-6">
-                <h3 className="font-semibold text-listen-ink mb-4 flex items-center gap-2">
-                  <Lightbulb size={18} className="text-listen-inkMute" />
-                  Key Themes
+              <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+                <h3 className="font-serif text-lg text-listen-ink mb-4 flex items-center gap-2">
+                  <Lightbulb size={18} className="text-listen-accent" />
+                  {tr('synthesisThemes')}
                 </h3>
 
                 <div className="space-y-3">
                   {synthesis.themes.map((theme, i) => (
-                    <div key={i} className="border-b border-listen-line pb-3 last:border-0">
-                      <div className="font-medium text-listen-ink">{theme.theme}</div>
-                      <div className="text-sm text-listen-inkMute mt-1">{theme.evidence}</div>
+                    <div key={i} className="border-b border-listen-line/50 pb-3 last:border-0 last:pb-0">
+                      <div className="font-medium text-listen-ink text-sm">{theme.theme}</div>
+                      <div className="text-sm text-listen-inkMute mt-1 leading-relaxed">{theme.evidence}</div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Contradictions */}
+            {/* Tensions / Contradictions */}
             {synthesis.contradictions.length > 0 && (
-              <div className="bg-white border border-listen-line rounded-xl p-6">
-                <h3 className="font-semibold text-listen-ink mb-3 flex items-center gap-2">
-                  <AlertTriangle size={18} className="text-listen-inkMute" />
-                  Potential Contradictions
+              <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+                <h3 className="font-serif text-lg text-listen-ink mb-3 flex items-center gap-2">
+                  <AlertTriangle size={18} className="text-listen-accentDeep" />
+                  {tr('synthesisTensions')}
                 </h3>
                 <ul className="space-y-2">
                   {synthesis.contradictions.map((c, i) => (
-                    <li key={i} className="text-listen-inkSoft text-sm">
+                    <li key={i} className="text-listen-inkSoft text-sm leading-relaxed flex items-start gap-2">
+                      <span className="text-listen-accentDeep mt-0.5 shrink-0">&#8212;</span>
                       {c}
                     </li>
                   ))}
@@ -318,18 +328,18 @@ const Synthesis: React.FC = () => {
               </div>
             )}
 
-            {/* Key Insights */}
-            <div className="bg-white rounded-xl border border-listen-line p-6">
-              <h3 className="font-semibold text-listen-ink mb-4">
-                Additional Insights
+            {/* Highlights / Key Insights */}
+            <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8">
+              <h3 className="font-serif text-lg text-listen-ink mb-4">
+                {tr('synthesisHighlights')}
               </h3>
               <ul className="space-y-2">
                 {synthesis.keyInsights.map((insight, i) => (
                   <li
                     key={i}
-                    className="flex items-start gap-2 text-listen-inkSoft"
+                    className="flex items-start gap-2 text-listen-inkSoft text-sm leading-relaxed"
                   >
-                    <span className="text-listen-inkMute mt-1">-</span>
+                    <span className="text-listen-inkMute mt-0.5 shrink-0">&#8212;</span>
                     {insight}
                   </li>
                 ))}
@@ -337,18 +347,20 @@ const Synthesis: React.FC = () => {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-2">
               <button
                 onClick={handleBack}
-                className="px-6 py-3 border border-listen-line text-listen-inkMute rounded-xl hover:bg-listen-paperDeep transition-colors flex items-center gap-2"
+                className="px-5 py-2.5 bg-white border border-listen-line text-listen-inkSoft rounded-full hover:bg-listen-paperDeep transition-colors flex items-center gap-2 text-sm font-medium"
               >
-                <ArrowLeft size={18} /> Continue Interview
+                <ArrowLeft size={16} />
+                {tr('synthesisBackToInterview')}
               </button>
               <button
                 onClick={handleExport}
-                className="flex-1 py-3 bg-listen-accent hover:bg-listen-accentDeep text-listen-ink font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 bg-listen-accent hover:bg-listen-accentDeep text-white font-semibold rounded-full transition-all flex items-center justify-center gap-2 shadow-accent text-sm"
               >
-                Export Data <ArrowRight size={18} />
+                {tr('synthesisGoToExport')}
+                <ArrowRight size={16} />
               </button>
             </div>
           </motion.div>
@@ -356,48 +368,48 @@ const Synthesis: React.FC = () => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white rounded-xl border border-listen-line p-12 text-center"
+            className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-red-900/30 flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle size={32} className="text-red-400" />
+            <div className="w-16 h-16 rounded-full bg-listen-accentSoft flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle size={32} className="text-listen-accentDeep" />
             </div>
-            <h2 className="text-xl font-semibold text-listen-ink mb-2">
-              Analysis Failed
+            <h2 className="font-serif text-xl text-listen-ink mb-2">
+              {tr('synthesisFailed')}
             </h2>
-            <p className="text-listen-inkMute mb-6">
-              There was an error analyzing the interview. Please try again.
+            <p className="text-listen-inkMute mb-6 text-sm">
+              {tr('synthesisFailedDesc')}
             </p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={handleBack}
-                className="px-6 py-3 border border-listen-line text-listen-inkMute rounded-xl hover:bg-listen-paperDeep transition-colors"
+                className="px-5 py-2.5 bg-white border border-listen-line text-listen-inkSoft rounded-full hover:bg-listen-paperDeep transition-colors text-sm font-medium"
               >
-                Back to Interview
+                {tr('synthesisBackToInterview')}
               </button>
               <button
                 onClick={handleRetryAnalysis}
-                className="px-6 py-3 bg-listen-accent hover:bg-listen-accentDeep text-listen-ink font-medium rounded-xl transition-colors flex items-center gap-2"
+                className="px-5 py-2.5 bg-listen-accent hover:bg-listen-accentDeep text-white rounded-full transition-colors flex items-center gap-2 text-sm font-medium shadow-accent"
               >
-                <RefreshCw size={18} />
-                Retry Analysis
+                <RefreshCw size={16} />
+                {tr('synthesisRetryAnalysis')}
               </button>
             </div>
           </motion.div>
         ) : (
-          <div className="bg-white rounded-xl border border-listen-line p-12 text-center">
-            <p className="text-listen-inkMute">
-              No interview data to analyze yet.
+          <div className="bg-white border border-listen-line/60 rounded-2xl shadow-paper p-6 sm:p-8 text-center">
+            <p className="text-listen-inkMute text-sm mb-4">
+              {tr('synthesisNoData')}
             </p>
             <button
               onClick={handleBack}
-              className="mt-4 px-6 py-2 bg-listen-accent text-listen-ink rounded-lg"
+              className="px-5 py-2.5 bg-listen-accent hover:bg-listen-accentDeep text-white rounded-full shadow-accent transition-colors text-sm font-medium"
             >
-              Go to Interview
+              {tr('synthesisGoToInterviewBtn')}
             </button>
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 
