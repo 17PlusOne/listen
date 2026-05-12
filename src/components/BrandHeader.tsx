@@ -2,8 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Github } from 'lucide-react';
 import { useLocale } from './LocaleProvider';
 import LocaleToggle from './LocaleToggle';
+
+const SOURCE_REPO_URL = 'https://github.com/17PlusOne/listen';
 
 interface BrandHeaderProps {
   /** 是否显示右侧操作区（默认 true） */
@@ -48,8 +51,17 @@ const BrandHeader: React.FC<BrandHeaderProps> = ({
         </Link>
 
         {showActions && (
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4 sm:gap-5">
             {actions}
+            <a
+              href={SOURCE_REPO_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 text-[12.5px] text-listen-inkSoft hover:text-listen-accent transition-colors"
+            >
+              <Github size={14} />
+              <span>{tr('sourceRepoLabel')}</span>
+            </a>
             <LocaleToggle />
           </div>
         )}
