@@ -81,12 +81,11 @@ export const CLAUDE_MODELS: AIModelOption[] = [
 ];
 
 // Default models for each provider
-// Stable production models: 2.5-flash is GA and reliably <3s, 3.x are still preview/unreliable
-export const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash';
+export const DEFAULT_GEMINI_MODEL = 'gemini-3.1-flash-lite';
 export const DEFAULT_CLAUDE_MODEL = 'claude-sonnet-4-5';
 
 // Synthesis models (auto-upgrade to best available for reasoning tasks)
-export const GEMINI_SYNTHESIS_MODEL = 'gemini-2.5-flash';
+export const GEMINI_SYNTHESIS_MODEL = 'gemini-3.1-flash-lite';
 export const CLAUDE_SYNTHESIS_MODEL = 'claude-opus-4-5';
 
 // Link expiration options
