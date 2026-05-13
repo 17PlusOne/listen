@@ -2,6 +2,8 @@
 // Server-side only - API keys never sent to client
 // Requires valid participant token to prevent quota abuse
 
+export const maxDuration = 60;
+
 import { NextResponse } from 'next/server';
 import { getInterviewProvider } from '@/lib/providers';
 import { getParticipantRequestContext } from '@/lib/researcherContext';

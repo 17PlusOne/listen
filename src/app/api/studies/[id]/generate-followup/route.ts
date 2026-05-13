@@ -3,6 +3,7 @@
 // Uses AI to suggest new research questions based on findings
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 import { NextResponse } from 'next/server';
 import { getInterviewProvider } from '@/lib/providers';
