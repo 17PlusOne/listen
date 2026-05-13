@@ -50,8 +50,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ greeting });
   } catch (error) {
     console.error('Greeting API error:', error);
+    const msg = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
     return NextResponse.json(
-      { error: 'Failed to generate greeting' },
+      { error: 'Failed to generate greeting', debug: msg },
       { status: 500 }
     );
   }

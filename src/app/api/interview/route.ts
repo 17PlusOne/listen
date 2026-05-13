@@ -91,8 +91,9 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     console.error('Interview API error:', error);
+    const msg = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
     return NextResponse.json(
-      { error: 'Failed to generate interview response' },
+      { error: 'Failed to generate interview response', debug: msg },
       { status: 500 }
     );
   }
