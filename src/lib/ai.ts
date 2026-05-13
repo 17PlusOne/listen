@@ -165,6 +165,7 @@ export const cleanJSON = (text: string): string => {
 };
 
 // Default fallback responses
+// Kept for backward compatibility; new code should use getDefaultInterviewResponse(locale)
 export const defaultInterviewResponse: AIInterviewResponse = {
   message: "I appreciate you sharing that. What else comes to mind?",
   questionAddressed: null,
@@ -172,6 +173,26 @@ export const defaultInterviewResponse: AIInterviewResponse = {
   profileUpdates: [],
   shouldConclude: false
 };
+
+// Locale-aware fallback for when the model returns invalid JSON
+export const getDefaultInterviewResponse = (
+  locale?: 'zh' | 'en'
+): AIInterviewResponse => ({
+  message:
+    locale === 'en'
+      ? "I appreciate you sharing that. What else comes to mind?"
+      : "嗯,我听到了。能再多说一点吗?",
+  questionAddressed: null,
+  phaseTransition: null,
+  profileUpdates: [],
+  shouldConclude: false,
+});
+
+// Locale-aware inline fallback message (used when model returns JSON but missing 'message' field)
+export const getDefaultInlineMessage = (locale?: 'zh' | 'en'): string =>
+  locale === 'en'
+    ? "That's interesting. Could you tell me more?"
+    : "嗯,这个挺有意思,可以再说说吗?";
 
 export const defaultSynthesisResult: SynthesisResult = {
   statedPreferences: [],

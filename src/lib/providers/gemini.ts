@@ -6,7 +6,8 @@ import {
   AIProvider,
   buildInterviewSystemPrompt,
   cleanJSON,
-  defaultInterviewResponse,
+  getDefaultInterviewResponse,
+  getDefaultInlineMessage,
   defaultSynthesisResult,
   defaultAggregateSynthesisResult
 } from '../ai';
@@ -148,7 +149,7 @@ export class GeminiProvider implements AIProvider {
 
       const parsed = JSON.parse(cleanJSON(result.text || '{}'));
       return {
-        message: parsed.message || "That's interesting. Could you tell me more?",
+        message: parsed.message || getDefaultInlineMessage('zh'),
         questionAddressed: parsed.questionAddressed ?? null,
         phaseTransition: parsed.phaseTransition ?? null,
         profileUpdates: parsed.profileUpdates || [],
@@ -156,7 +157,7 @@ export class GeminiProvider implements AIProvider {
       };
     } catch (error) {
       console.error('Gemini interview response error:', error);
-      return defaultInterviewResponse;
+      return getDefaultInterviewResponse('zh');
     }
   }
 
