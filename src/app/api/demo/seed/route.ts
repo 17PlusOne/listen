@@ -85,21 +85,27 @@ export async function DELETE() {
     // Use the researcher's KV client directly for cleanup operations
     const kv = context.kvClient;
 
-    // Delete demo studies
+    // Delete demo studies AND every interview linked to them.
+    // (Previous version only cleared interviews enumerated in DEMO_INTERVIEWS,
+    // leaving orphan interviews if any extra ones got attached to a demo study.
+    // Reset must produce a truly clean slate so re-seeding restores the exact
+    // canonical 3 interviews.)
     let studiesDeleted = 0;
+    let interviewsDeleted = 0;
     for (const study of DEMO_STUDIES) {
+      // 1) Read every interview id currently linked to this demo study
+      const linkedIds = (await kv.smembers(`study-interviews:${study.id}`)) as string[];
+      for (const id of linkedIds) {
+        await kv.del(`interview:${id}`);
+        await kv.srem('all-interviews', id);
+        interviewsDeleted++;
+      }
+      // 2) Clear the per-study interview index
+      await kv.del(`study-interviews:${study.id}`);
+      // 3) Remove the study itself
       await kv.del(`study:${study.id}`);
       await kv.srem('all-studies', study.id);
       studiesDeleted++;
-    }
-
-    // Delete demo interviews
-    let interviewsDeleted = 0;
-    for (const interview of DEMO_INTERVIEWS) {
-      await kv.del(`interview:${interview.id}`);
-      await kv.srem(`study-interviews:${interview.studyId}`, interview.id);
-      await kv.srem('all-interviews', interview.id);
-      interviewsDeleted++;
     }
 
     return NextResponse.json({
